@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        body.rotation = 0f;
+
         if(Input.GetKeyDown(KeyCode.Space)) {
             jumping = true;
             Debug.Log("space");
@@ -33,14 +35,16 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        // JUMPING
         if (jumping) {
-            bool isGrounded = Physics2D.OverlapCircleAll(groundCheck.position, 0.15f, playerMask).Length != 0;
-           if (isGrounded) {
+           if (Physics2D.OverlapCircleAll(groundCheck.position, 0.15f, playerMask).Length != 0) {
                 body.AddForce(normalJump, ForceMode2D.Impulse);
                 jumping = false;
            }
         }
-        body.AddForce(new Vector2(dirX, 0f), ForceMode2D.Force);
+
+        // WALKING
+        body.velocity = new Vector2(dirX, body.velocity.y);
     }
 
     void OnCollisionEnter2D(Collision2D collisionInfo)
