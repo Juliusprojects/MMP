@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Transform privateTransform = null;
+    [SerializeField] private Transform groundCheck = null;
+    [SerializeField] private LayerMask playerMask;
     private bool jumping;
     private Rigidbody2D body;
     private float moveSpeed, dirX;
@@ -33,8 +34,11 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         if (jumping) {
-           body.AddForce(normalJump, ForceMode2D.Impulse);
-           jumping = false;
+            bool isGrounded = Physics2D.OverlapCircleAll(groundCheck.position, 0.15f, playerMask).Length != 0;
+           if (isGrounded) {
+                body.AddForce(normalJump, ForceMode2D.Impulse);
+                jumping = false;
+           }
         }
         body.AddForce(new Vector2(dirX, 0f), ForceMode2D.Force);
     }
