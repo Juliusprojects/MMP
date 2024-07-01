@@ -5,18 +5,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float movePower = 10f;
-    public float jumpPower = 25f; 
-    public LayerMask groundLayer; 
-    public Transform groundCheck; 
-    public float groundCheckDistance = 0.1f; 
+    public float jumpPower = 25f;
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+    public float groundCheckDistance = 0.1f;
+    public float fallMultiplier = 6f;
+    public float lowJumpMultiplier = 5f;
+    public float jumpCooldown = 0.7f;
 
-    public float fallMultiplier = 6f; 
-    public float lowJumpMultiplier = 5f; 
     private Rigidbody2D rb;
     private Animator anim;
     private int direction = 1;
-    bool isJumping = false;
+    private bool isJumping = false;
     private bool alive = true;
+    private float lastJumpTime = 0f;
 
     void Start()
     {
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
             }
-            else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.W))
+            else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow))
             {
                 rb.velocity += Vector2.up * (Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime);
             }
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveVelocity = Vector3.zero;
         anim.SetBool("isRun", false);
 
-        if (Input.GetAxisRaw("Horizontal") < 0)
+        if (Input.GetAxisRaw("Horizontal") < 0 || Input.GetKey(KeyCode.LeftArrow))
         {
             direction = -1;
             moveVelocity = Vector3.left;
@@ -70,7 +72,7 @@ public class PlayerController : MonoBehaviour
             if (!anim.GetBool("isJump"))
                 anim.SetBool("isRun", true);
         }
-        if (Input.GetAxisRaw("Horizontal") > 0)
+        if (Input.GetAxisRaw("Horizontal") > 0 || Input.GetKey(KeyCode.RightArrow))
         {
             direction = 1;
             moveVelocity = Vector3.right;
@@ -83,11 +85,14 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetAxisRaw("Vertical") > 0) && !anim.GetBool("isJump") && IsGrounded())
+        if (Time.time - lastJumpTime < jumpCooldown) return; // Check for jump cooldown
+
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0) && !anim.GetBool("isJump") && IsGrounded())
         {
             isJumping = true;
             anim.SetBool("isJump", true);
             rb.velocity = Vector2.up * jumpPower; // Setting velocity directly for a consistent jump
+            lastJumpTime = Time.time; // Update the last jump time
         }
         if (!isJumping)
         {

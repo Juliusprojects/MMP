@@ -5,7 +5,7 @@ public class CameraFollow : MonoBehaviour
     public Transform player;
     public float smoothSpeed = 0.2f;
     public Vector3 playerOffset = new Vector3(0, 5, -10);
-    public Vector3 portalOffset = new Vector3(0, 3, -10);
+    public Vector3 portalOffset = new Vector3(0, 1, -10);
 
     private Vector3 velocity = Vector3.zero;
     private GameObject portal;
