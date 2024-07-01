@@ -8,6 +8,8 @@ public class PortalManagerController : MonoBehaviour
     public float xOffset = -0.3f; // Offset for the x-axis
     public float yOffset = 2.3f; // Offset for the y-axis
 
+    public Vector3 spriteOffset = new Vector3(-0.4f, 0.157f, 0); // Additional offset for the PortalSprite
+
     void Start()
     {
         player = GameObject.FindWithTag("Player");
@@ -57,20 +59,22 @@ public class PortalManagerController : MonoBehaviour
     void SetPortalActive(bool isActive)
     {
         portal.SetActive(isActive);
-
-        // Ensure all child objects are also set active or inactive
-        //foreach (Transform child in portal.transform)
-        //{
-        //    child.gameObject.SetActive(isActive);
-        //}
     }
 
     void ResetChildPositions()
     {
         foreach (Transform child in portal.transform)
         {
-            // Reset the local position of each child to ensure correct positioning
-            child.localPosition = Vector3.zero;
+            if (child.name == "PortalSprite")
+            {
+                // Apply the additional offset for the PortalSprite
+                child.localPosition = spriteOffset;
+            }
+            else
+            {
+                // Reset the local position of other children to zero
+                child.localPosition = Vector3.zero;
+            }
         }
     }
 }

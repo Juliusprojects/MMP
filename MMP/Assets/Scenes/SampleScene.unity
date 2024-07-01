@@ -147,15 +147,15 @@ Transform:
   m_GameObject: {fileID: 81549017}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -41.84, y: -10.43, z: 0.07607391}
+  m_LocalPosition: {x: -45.63, y: 5.28, z: 0.07607391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 105167166}
   - {fileID: 635566011}
-  - {fileID: 195122046}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &195122045
+--- !u!1 &105167165
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,8 +163,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 195122046}
-  - component: {fileID: 195122047}
+  - component: {fileID: 105167166}
+  - component: {fileID: 105167168}
   m_Layer: 0
   m_Name: PortalSprite
   m_TagString: Untagged
@@ -172,28 +172,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &195122046
+--- !u!4 &105167166
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195122045}
+  m_GameObject: {fileID: 105167165}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.42, y: -29.34, z: -0.03999591}
-  m_LocalScale: {x: 0.6877814, y: 0.6877814, z: 0.6877814}
+  m_LocalPosition: {x: 6.02, y: -1.85, z: -0.0760739}
+  m_LocalScale: {x: 0.6957969, y: 0.6957969, z: 0.6957969}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 81549018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &195122047
+--- !u!212 &105167168
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195122045}
+  m_GameObject: {fileID: 105167165}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -874,7 +874,7 @@ Transform:
   m_GameObject: {fileID: 635566010}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.3, y: -29.34, z: -0.03999591}
+  m_LocalPosition: {x: 6.42, y: -2.03, z: -0.03999591}
   m_LocalScale: {x: 0.6877814, y: 0.6877814, z: 0.6877814}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -895,8 +895,8 @@ MonoBehaviour:
   verticalOffset: 0
   horizontalOffset: 0
   horizontalTeleportOffset: -1.6
-  upwardTeleportOffset: 4
-  downwardTeleportOffset: 4
+  upwardTeleportOffset: 1
+  downwardTeleportOffset: 1
   cubeSize: 22
   horizontalTeleportThreshold: 0.5
   topTeleportThreshold: 3.5
@@ -932,7 +932,7 @@ Transform:
   m_GameObject: {fileID: 708201922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3428, y: 3.74, z: 0}
+  m_LocalPosition: {x: 0.2864, y: 3.76, z: 0}
   m_LocalScale: {x: 0.16158547, y: 0.31027585, z: 2.1909235}
   m_ConstrainProportionsScale: 0
   m_Children: []
