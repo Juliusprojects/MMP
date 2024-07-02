@@ -9,9 +9,9 @@ public class PortalCollidersController : MonoBehaviour
     public float upwardTeleportOffset = 1f;
     public float downwardTeleportOffset = 1f;
     public float cubeSize = 22f;
-    public float horizontalTeleportThreshold = 0.5f; 
-    public float topTeleportThreshold = 3.5f; 
-    public float bottomTeleportThreshold = 2.5f; 
+    public float horizontalTeleportThreshold = 0.5f;
+    public float topTeleportThreshold = 3.5f;
+    public float bottomTeleportThreshold = 2.5f;
 
     public GameObject topCollider;
     public GameObject bottomCollider;
@@ -96,14 +96,30 @@ public class PortalCollidersController : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (topCollider == null || bottomCollider == null || leftCollider == null || rightCollider == null)
-            return;
+        float halfSize = cubeSize / 2f;
 
+        // Local Positions
+        Vector3 topLocalPosition = new Vector3(0, halfSize + verticalOffset, 0);
+        Vector3 bottomLocalPosition = new Vector3(0, -(halfSize + verticalOffset), 0);
+        Vector3 leftLocalPosition = new Vector3(-(halfSize + horizontalOffset), 0, 0);
+        Vector3 rightLocalPosition = new Vector3(halfSize + horizontalOffset, 0, 0);
+
+        // Convert to World Positions
+        Vector3 topPosition = transform.TransformPoint(topLocalPosition);
+        Vector3 bottomPosition = transform.TransformPoint(bottomLocalPosition);
+        Vector3 leftPosition = transform.TransformPoint(leftLocalPosition);
+        Vector3 rightPosition = transform.TransformPoint(rightLocalPosition);
+
+        // Sizes
+        Vector3 topBottomSize = new Vector3(cubeSize, 2);
+        Vector3 leftRightSize = new Vector3(2, cubeSize);
+
+        // Draw the gizmos
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(topCollider.transform.position, topCollider.GetComponent<BoxCollider2D>().size);
-        Gizmos.DrawWireCube(bottomCollider.transform.position, bottomCollider.GetComponent<BoxCollider2D>().size);
-        Gizmos.DrawWireCube(leftCollider.transform.position, leftCollider.GetComponent<BoxCollider2D>().size);
-        Gizmos.DrawWireCube(rightCollider.transform.position, rightCollider.GetComponent<BoxCollider2D>().size);
+        Gizmos.DrawWireCube(topPosition, topBottomSize);
+        Gizmos.DrawWireCube(bottomPosition, topBottomSize);
+        Gizmos.DrawWireCube(leftPosition, leftRightSize);
+        Gizmos.DrawWireCube(rightPosition, leftRightSize);
     }
 }
 
@@ -114,7 +130,6 @@ public enum PortalDirection
     Left,
     Right
 }
-
 
 public class PortalSideCollider : MonoBehaviour
 {
@@ -131,31 +146,39 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
+            if (rb == null) return;
+
             Bounds playerBounds = other.bounds;
             Bounds colliderBounds = GetComponent<Collider2D>().bounds;
+
+            float minVelocityThreshold = 0.1f; // Minimum velocity to consider as intentional movement
+
+            Debug.Log("v y: " + rb.velocity.y);
+            Debug.Log("v x: " + rb.velocity.x);
 
             switch (direction)
             {
                 case PortalDirection.Top:
-                    if (playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
+                    if (rb.velocity.y > minVelocityThreshold && playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
                     break;
                 case PortalDirection.Bottom:
-                    if (colliderBounds.max.y - playerBounds.min.y >= portalController.bottomTeleportThreshold)
+                    if (rb.velocity.y < -minVelocityThreshold && colliderBounds.max.y - playerBounds.min.y >= portalController.bottomTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
                     break;
                 case PortalDirection.Left:
-                    if (colliderBounds.max.x - playerBounds.min.x >= portalController.horizontalTeleportThreshold)
+                    if (rb.velocity.x < -minVelocityThreshold && colliderBounds.max.x - playerBounds.min.x >= portalController.horizontalTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
                     break;
                 case PortalDirection.Right:
-                    if (playerBounds.max.x - colliderBounds.min.x >= portalController.horizontalTeleportThreshold)
+                    if (rb.velocity.x > minVelocityThreshold && playerBounds.max.x - colliderBounds.min.x >= portalController.horizontalTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }

@@ -1,22 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Util;
+
 
 public class PlayerController : MonoBehaviour
 {
     public float movePower = 10f;
-    public float jumpPower = 25f; 
-    public LayerMask groundLayer; 
-    public Transform groundCheck; 
-    public float groundCheckDistance = 0.1f; 
+    public float jumpPower = 25f;
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+    public float groundCheckDistance = 0.1f;
+    public float fallMultiplier = 6f;
+    public float lowJumpMultiplier = 5f;
+    public float jumpCooldown = 0.2f;
 
-    public float fallMultiplier = 6f; 
-    public float lowJumpMultiplier = 5f; 
     private Rigidbody2D rb;
     private Animator anim;
     private int direction = 1;
-    bool isJumping = false;
+    private bool isJumping = false;
     private bool alive = true;
+
+    // ground layer stuff
+    private float groundedTime = 0f; // Time of impact when landing on ground layer
+    private bool grounded;
+
 
     void Start()
     {
@@ -24,6 +32,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         groundLayer = LayerMask.GetMask("Ground");
         groundCheck = transform.Find("GroundCheck");
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate; // after changing running to a velocity based method to check velocity on portal collision the character moved laggy without this
         if (groundCheck == null)
         {
             Debug.LogError("GroundCheck transform not found. Please ensure there is a child object named GroundCheck");
@@ -33,17 +42,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Restart();
+        CheckGrounded();
         if (alive)
         {
-            if (rb.velocity.y < 0) // Better jump feel
-            {
-                rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
-            }
-            else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.W))
-            {
-                rb.velocity += Vector2.up * (Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime);
-            }
-
+            ApplyBetterJumpPhysics();
             Hurt();
             Die();
             Attack();
@@ -52,42 +54,59 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+
+    private void ApplyBetterJumpPhysics()
     {
-        anim.SetBool("isJump", false);
+        if (rb.velocity.y < 0)
+        {
+            // Increase the fall speed by adding more downward force
+            rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
+        }
+        else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow))
+        {
+            // Reduce the upward velocity for a shorter jump when the jump key is released early
+            rb.velocity += Vector2.up * (Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime);
+        }
     }
+
 
     void Run()
     {
-        Vector3 moveVelocity = Vector3.zero;
+        Vector2 moveVelocity = Vector2.zero;
         anim.SetBool("isRun", false);
 
-        if (Input.GetAxisRaw("Horizontal") < 0)
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+
+        if (InputUtil.Left())
         {
             direction = -1;
-            moveVelocity = Vector3.left;
+            moveVelocity = Vector2.left;
             transform.localScale = new Vector3(direction, 1, 1);
             if (!anim.GetBool("isJump"))
                 anim.SetBool("isRun", true);
         }
-        if (Input.GetAxisRaw("Horizontal") > 0)
+        else if (InputUtil.Right())
         {
             direction = 1;
-            moveVelocity = Vector3.right;
+            moveVelocity = Vector2.right;
             transform.localScale = new Vector3(direction, 1, 1);
             if (!anim.GetBool("isJump"))
                 anim.SetBool("isRun", true);
         }
-        transform.position += moveVelocity * movePower * Time.deltaTime;
+
+
+        rb.velocity = new Vector2(moveVelocity.x * movePower, rb.velocity.y);
     }
 
     void Jump()
     {
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetAxisRaw("Vertical") > 0) && !anim.GetBool("isJump") && IsGrounded())
+        if (Time.time - groundedTime < jumpCooldown) return; // Check for jump cooldown
+
+        if (InputUtil.Up() && !anim.GetBool("isJump") && grounded)
         {
             isJumping = true;
             anim.SetBool("isJump", true);
-            rb.velocity = Vector2.up * jumpPower; // Setting velocity directly for a consistent jump
+            rb.velocity = Vector2.up * jumpPower; // Jump
         }
         if (!isJumping)
         {
@@ -95,10 +114,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    bool IsGrounded()
+    void CheckGrounded()
     {
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-        return hit.collider != null; // Returns true if the ray hits something on the ground layer
+        bool wasGrounded = grounded;
+        grounded = hit.collider != null; // Sets grounded to true if the ray hits something on the ground layer
+
+        if (grounded && !wasGrounded) // Just landed
+        {
+            groundedTime = Time.time; // Set to time of impact when landing on ground layer
+            isJumping = false; // Reset isJumping when grounded
+            anim.SetBool("isJump", false); // Ensure the animation state is reset
+        }
+
+        if (grounded)
+        {
+
+        }
     }
 
     void Attack()
@@ -139,3 +171,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+
+
