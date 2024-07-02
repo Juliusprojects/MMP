@@ -393,11 +393,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.37
+      value: 67
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.81
+      value: 5.62
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.z
@@ -448,7 +448,7 @@ PrefabInstance:
       addedObject: {fileID: 1518095174}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8853461538655865705, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
-      insertIndex: -1
+      insertIndex: 2
       addedObject: {fileID: 500077481}
   m_SourcePrefab: {fileID: 100100000, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
 --- !u!1 &500077472 stripped
@@ -482,6 +482,7 @@ MonoBehaviour:
   groundCheckDistance: 0.1
   fallMultiplier: 6
   lowJumpMultiplier: 5
+  jumpCooldown: 0.2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +636,7 @@ MonoBehaviour:
   player: {fileID: 0}
   smoothSpeed: 0.2
   playerOffset: {x: 0, y: 5, z: -10}
-  portalOffset: {x: 0, y: 0, z: -10}
+  portalOffset: {x: 0, y: 1, z: -10}
 --- !u!1 &592116771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,6 +1588,7 @@ MonoBehaviour:
   portal: {fileID: 0}
   xOffset: -0.3
   yOffset: 2.3
+  spriteOffset: {x: -0.4, y: 0.18, z: 0}
 --- !u!4 &1207483416
 Transform:
   m_ObjectHideFlags: 0
