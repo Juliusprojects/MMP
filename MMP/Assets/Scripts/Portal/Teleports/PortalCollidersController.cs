@@ -146,31 +146,39 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
+            if (rb == null) return;
+
             Bounds playerBounds = other.bounds;
             Bounds colliderBounds = GetComponent<Collider2D>().bounds;
+
+            float minVelocityThreshold = 0.1f; // Minimum velocity to consider as intentional movement
+
+            Debug.Log("v y: " + rb.velocity.y);
+            Debug.Log("v x: " + rb.velocity.x);
 
             switch (direction)
             {
                 case PortalDirection.Top:
-                    if (playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
+                    if (rb.velocity.y > minVelocityThreshold && playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
                     break;
                 case PortalDirection.Bottom:
-                    if (colliderBounds.max.y - playerBounds.min.y >= portalController.bottomTeleportThreshold)
+                    if (rb.velocity.y < -minVelocityThreshold && colliderBounds.max.y - playerBounds.min.y >= portalController.bottomTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
                     break;
                 case PortalDirection.Left:
-                    if (colliderBounds.max.x - playerBounds.min.x >= portalController.horizontalTeleportThreshold)
+                    if (rb.velocity.x < -minVelocityThreshold && colliderBounds.max.x - playerBounds.min.x >= portalController.horizontalTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
                     break;
                 case PortalDirection.Right:
-                    if (playerBounds.max.x - colliderBounds.min.x >= portalController.horizontalTeleportThreshold)
+                    if (rb.velocity.x > minVelocityThreshold && playerBounds.max.x - colliderBounds.min.x >= portalController.horizontalTeleportThreshold)
                     {
                         portalController.TeleportPlayer(direction);
                     }
