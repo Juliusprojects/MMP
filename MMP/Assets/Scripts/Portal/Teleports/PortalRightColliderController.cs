@@ -1,10 +1,12 @@
+using System;
 using UnityEngine;
 
+[Obsolete]
 public class PortalRightColliderController : MonoBehaviour
 {
     private GameObject player; 
     public Collider2D leftCollider;
-    public float offset = 1f; // Adjust this value as needed
+    public float offset = 1f;
 
     void Start()
     {
@@ -34,7 +36,7 @@ public class PortalRightColliderController : MonoBehaviour
         if (other.gameObject == player && leftCollider != null)
         {
             Vector3 playerPosition = player.transform.position;
-            playerPosition.x = leftCollider.transform.position.x + offset; // Apply offset towards the center
+            playerPosition.x = leftCollider.transform.position.x + offset; // Apply offset towards the center to avoid being teleported back and forth
             player.transform.position = playerPosition;
             Debug.Log("Teleported player to: " + playerPosition);
         }

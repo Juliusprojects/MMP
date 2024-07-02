@@ -247,6 +247,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 794697841, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.22
+      objectReference: {fileID: 0}
     - target: {fileID: 794697843, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -895,17 +899,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalOffset: 0
   horizontalOffset: 0
-  horizontalTeleportOffset: -1.6
-  upwardTeleportOffset: 1
-  downwardTeleportOffset: 1
+  horizontalTeleportOffset: 0
+  upwardTeleportOffset: 0
+  downwardTeleportOffset: 0
   cubeSize: 22
   horizontalTeleportThreshold: 0.5
   topTeleportThreshold: 3.5
   bottomTeleportThreshold: 2.5
-  topCollider: {fileID: 0}
-  bottomCollider: {fileID: 0}
-  leftCollider: {fileID: 0}
-  rightCollider: {fileID: 0}
+  topPortal: {fileID: 0}
+  bottomPortal: {fileID: 0}
+  leftPortal: {fileID: 0}
+  rightPortal: {fileID: 0}
 --- !u!1 &708201922
 GameObject:
   m_ObjectHideFlags: 0

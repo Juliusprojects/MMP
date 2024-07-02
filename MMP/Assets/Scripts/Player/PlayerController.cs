@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Util;
 
@@ -45,7 +46,6 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         if (alive)
         {
-            ApplyBetterJumpPhysics();
             Hurt();
             Die();
             Attack();
@@ -54,6 +54,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    private void FixedUpdate()
+    {
+        ApplyBetterJumpPhysics();
+    }
 
     private void ApplyBetterJumpPhysics()
     {
@@ -74,8 +79,6 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 moveVelocity = Vector2.zero;
         anim.SetBool("isRun", false);
-
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
 
         if (InputUtil.Left())
         {
@@ -118,18 +121,13 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
         bool wasGrounded = grounded;
-        grounded = hit.collider != null; // Sets grounded to true if the ray hits something on the ground layer
+        grounded = hit.collider != null; // Sets grounded to true if the ray hits the ground layer
 
         if (grounded && !wasGrounded) // Just landed
         {
             groundedTime = Time.time; // Set to time of impact when landing on ground layer
-            isJumping = false; // Reset isJumping when grounded
-            anim.SetBool("isJump", false); // Ensure the animation state is reset
-        }
-
-        if (grounded)
-        {
-
+            isJumping = false; 
+            anim.SetBool("isJump", false); 
         }
     }
 
