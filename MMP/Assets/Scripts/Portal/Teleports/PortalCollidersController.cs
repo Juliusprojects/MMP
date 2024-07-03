@@ -5,19 +5,14 @@ public class PortalCollidersController : MonoBehaviour
     private GameObject player;
     public float verticalOffset = 0f;
     public float horizontalOffset = 0f;
-    public float horizontalTeleportOffset = 0f;
-    public float upwardTeleportOffset = 0f;
-    public float downwardTeleportOffset = 0f;
     public float cubeSize = 22f;
     public float horizontalTeleportThreshold = 0.5f;
-    public float topTeleportThreshold = 3.5f;
-    public float bottomTeleportThreshold = 2.5f; // will probably be player height
+    public float topTeleportThreshold = 3.5f; // will probably be player height
 
     public GameObject topPortal;
     public GameObject bottomPortal;
     public GameObject leftPortal;
     public GameObject rightPortal;
-
 
     void Start()
     {
@@ -65,32 +60,34 @@ public class PortalCollidersController : MonoBehaviour
         leftPortal.transform.localPosition = new Vector3(-(halfSize + horizontalOffset), 0, 0);
         rightPortal.transform.localPosition = new Vector3(halfSize + horizontalOffset, 0, 0);
 
+        // Only here so it resets properly when cubeSize is changed in inspector
         topPortal.GetComponent<BoxCollider2D>().size = new Vector2(cubeSize, 2);
         bottomPortal.GetComponent<BoxCollider2D>().size = new Vector2(cubeSize, 2);
         leftPortal.GetComponent<BoxCollider2D>().size = new Vector2(2, cubeSize);
         rightPortal.GetComponent<BoxCollider2D>().size = new Vector2(2, cubeSize);
     }
 
-    public void TeleportPlayer(PortalSide direction)
+    public void TeleportPlayer(PortalSide portalSide)
     {
         Vector3 playerPosition = player.transform.position;
         Collider2D playerCollider = player.GetComponent<Collider2D>();
-        switch (direction)
+        switch (portalSide)
         {
             case PortalSide.Bottom:
-            float playerHeight = playerCollider.bounds.size.y;
-            float topPortalLowerBound = topPortal.GetComponent<BoxCollider2D>().bounds.min.y;
-            // Set the players new position so their lower bounds match the top portals lower bounds
-            playerPosition.y = topPortalLowerBound + (playerHeight / 2);
-            break;
+                float playerHeight = playerCollider.bounds.size.y;
+                float topPortalLowerBound = topPortal.GetComponent<BoxCollider2D>().bounds.min.y;
+                // Set the players new position so their lower bounds match the top portals lower bounds
+                // half player offset because normally player center is on lower bound portal
+                playerPosition.y = topPortalLowerBound + (playerHeight / 2);
+                break;
             case PortalSide.Top:
-                playerPosition.y = bottomPortal.transform.position.y - downwardTeleportOffset;
+                playerPosition.y = bottomPortal.transform.position.y;
                 break;
             case PortalSide.Left:
-                playerPosition.x = rightPortal.GetComponent<BoxCollider2D>().bounds.min.x + horizontalTeleportOffset;
+                playerPosition.x = rightPortal.GetComponent<BoxCollider2D>().bounds.min.x;
                 break;
             case PortalSide.Right:
-                playerPosition.x = leftPortal.GetComponent<BoxCollider2D>().bounds.max.x - horizontalTeleportOffset;
+                playerPosition.x = leftPortal.GetComponent<BoxCollider2D>().bounds.max.x;
                 break;
         }
 
@@ -148,8 +145,8 @@ public class PortalSideCollider : MonoBehaviour
         CheckForTeleport(other);
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("OnTriggerEnter2D");
+    void OnTriggerEnter2D(Collider2D other)
+    {
         CheckForTeleport(other);
     }
 
@@ -177,8 +174,7 @@ public class PortalSideCollider : MonoBehaviour
                     //{
                     //    portalController.TeleportPlayer(portalSide);
                     //}
-
-                    if (rb.velocity.y >= 0)
+                    if (rb.velocity.y >= minVelocityThreshold)
                     {
                         rb.velocity = new Vector2(rb.velocity.x, -0.1f);
                     }
@@ -186,7 +182,7 @@ public class PortalSideCollider : MonoBehaviour
                     break;
                 case PortalSide.Top:
                     if (rb.velocity.y > minVelocityThreshold // moving at a min velocity into the portal
-                        && playerBounds.max.y - colliderBounds.min.y >= portalController.bottomTeleportThreshold) //  
+                        && playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
                     {
                         portalController.TeleportPlayer(portalSide);
                     }

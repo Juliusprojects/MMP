@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class PortalManagerController : MonoBehaviour
 {
-    public GameObject portal; // Assign the Portal GameObject in the Inspector
-    private GameObject player; // The player GameObject
+    public GameObject portal; 
+    private GameObject player; 
 
-    public float xOffset = -0.3f; // Offset for the x-axis
-    public float yOffset = 2.3f; // Offset for the y-axis
+    public float xOffset = -0.3f; 
+    public float yOffset = 2.3f; 
 
-    public Vector3 spriteOffset = new Vector3(-0.4f, 0.18f, 0); // Additional offset for the PortalSprite
+    public Vector3 spriteOffset = new Vector3(-0.4f, 0.18f, 0); 
 
     void Start()
     {

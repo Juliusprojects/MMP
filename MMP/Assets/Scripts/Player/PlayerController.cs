@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using Util;
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckDistance = 0.1f;
     public float fallMultiplier = 6f;
-    public float lowJumpMultiplier = 5f;
+    public float lowJumpMultiplier = 9f;
     public float jumpCooldown = 0.2f;
 
     private Rigidbody2D rb;
@@ -25,6 +26,11 @@ public class PlayerController : MonoBehaviour
     // ground layer stuff
     private float groundedTime = 0f; // Time of impact when landing on ground layer
     private bool grounded;
+
+
+    // DEBUG - remove later
+    private float maxYPosition = float.MinValue;
+    private float minYPosition = float.MaxValue;
 
 
     void Start()
@@ -42,14 +48,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (transform.position.y > maxYPosition) maxYPosition = transform.position.y;
+        if (transform.position.y < minYPosition) minYPosition = transform.position.y;
+
         Restart();
         CheckGrounded();
         if (alive)
         {
-            Hurt();
-            Die();
-            Attack();
-            Jump();
+            if (InputUtil.Up()) { Jump(); }
             Run();
         }
     }
@@ -97,7 +103,6 @@ public class PlayerController : MonoBehaviour
                 anim.SetBool("isRun", true);
         }
 
-
         rb.velocity = new Vector2(moveVelocity.x * movePower, rb.velocity.y);
     }
 
@@ -105,15 +110,12 @@ public class PlayerController : MonoBehaviour
     {
         if (Time.time - groundedTime < jumpCooldown) return; // Check for jump cooldown
 
-        if (InputUtil.Up() && !anim.GetBool("isJump") && grounded)
+        if (!anim.GetBool("isJump") && grounded)
         {
+            Debug.Log("Min height: " + minYPosition);
             isJumping = true;
             anim.SetBool("isJump", true);
             rb.velocity = Vector2.up * jumpPower; // Jump
-        }
-        if (!isJumping)
-        {
-            return;
         }
     }
 
@@ -125,9 +127,12 @@ public class PlayerController : MonoBehaviour
 
         if (grounded && !wasGrounded) // Just landed
         {
+            Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
+            maxYPosition = transform.position.y;
             groundedTime = Time.time; // Set to time of impact when landing on ground layer
             isJumping = false; 
-            anim.SetBool("isJump", false); 
+            anim.SetBool("isJump", false);
+
         }
     }
 

@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 81549017}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -45.63, y: 5.28, z: 0.07607391}
+  m_LocalPosition: {x: -7.5, y: 16.2, z: 0.07607391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -254,6 +254,10 @@ PrefabInstance:
     - target: {fileID: 794697843, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 794697847, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 245814713800311564, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_Layer
@@ -397,11 +401,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 67
+      value: 67.3
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.62
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.z
@@ -452,7 +456,7 @@ PrefabInstance:
       addedObject: {fileID: 1518095174}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8853461538655865705, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
-      insertIndex: 2
+      insertIndex: 1
       addedObject: {fileID: 500077481}
   m_SourcePrefab: {fileID: 100100000, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
 --- !u!1 &500077472 stripped
@@ -485,7 +489,7 @@ MonoBehaviour:
   groundCheck: {fileID: 0}
   groundCheckDistance: 0.1
   fallMultiplier: 6
-  lowJumpMultiplier: 5
+  lowJumpMultiplier: 9
   jumpCooldown: 0.2
 --- !u!1 &519420028
 GameObject:
@@ -899,9 +903,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalOffset: 0
   horizontalOffset: 0
-  horizontalTeleportOffset: 0
-  upwardTeleportOffset: 0
-  downwardTeleportOffset: 0
+  horizontalTeleportOffset: -1.6
+  upwardTeleportOffset: 1
+  downwardTeleportOffset: 1
   cubeSize: 22
   horizontalTeleportThreshold: 0.5
   topTeleportThreshold: 3.5
