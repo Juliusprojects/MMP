@@ -609,6 +609,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 794697847, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 794697847, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 664020cb371562c4bbebaed6df996e4e, type: 2}
+    - target: {fileID: 794697847, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_Interpolate
       value: 1
       objectReference: {fileID: 0}
@@ -1315,7 +1323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bdf255ad86c93748951160e8c733dcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movePower: 10
+  moveSpeed: 10
   jumpPower: 25
   groundLayer:
     serializedVersion: 2
@@ -1324,7 +1332,7 @@ MonoBehaviour:
   groundCheckDistance: 0.1
   fallMultiplier: 6
   lowJumpMultiplier: 9
-  jumpCooldown: 0.2
+  jumpCooldown: 0.13
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

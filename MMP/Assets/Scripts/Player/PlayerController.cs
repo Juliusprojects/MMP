@@ -8,20 +8,18 @@ using Util;
 //tesst
 public class PlayerController : MonoBehaviour
 {
-    public float movePower = 10f;
+    public float moveSpeed = 10f;
     public float jumpPower = 25f;
     public LayerMask groundLayer;
     public Transform groundCheck;
     public float groundCheckDistance = 0.1f;
     public float fallMultiplier = 6f;
     public float lowJumpMultiplier = 9f;
-    public float jumpCooldown = 0.2f;
+    public float jumpCooldown = 0.13f;
 
     private Rigidbody2D rb;
     private Animator anim;
-    private int direction = 1;
     private bool isJumping = false;
-    private bool alive = true;
 
     // ground layer stuff
     private float groundedTime = 0f; // Time of impact when landing on ground layer
@@ -51,13 +49,9 @@ public class PlayerController : MonoBehaviour
         if (transform.position.y > maxYPosition) maxYPosition = transform.position.y;
         if (transform.position.y < minYPosition) minYPosition = transform.position.y;
 
-        Restart();
         CheckGrounded();
-        if (alive)
-        {
-            if (InputUtil.Up()) { Jump(); }
-            Run();
-        }
+        if (InputUtil.Up()) { Jump(); }
+        Run(InputUtil.HorizontalInput());
     }
 
 
@@ -73,7 +67,7 @@ public class PlayerController : MonoBehaviour
             // Increase the fall speed by adding more downward force
             rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
         }
-        else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow))
+        else if (rb.velocity.y > 0 && !InputUtil.Up())
         {
             // Reduce the upward velocity for a shorter jump when the jump key is released early
             rb.velocity += Vector2.up * (Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime);
@@ -81,29 +75,45 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    void Run()
+    // void Run(float x)
+    // {
+    //     anim.SetBool("isRun", false);
+
+    //     if (InputUtil.Left())
+    //     {
+    //         transform.localScale = new Vector3(x, 1, 1);
+    //         if (!anim.GetBool("isJump"))
+    //             anim.SetBool("isRun", true);
+    //     }
+    //     else if (InputUtil.Right())
+    //     {
+    //         transform.localScale = new Vector3(x, 1, 1);
+    //         if (!anim.GetBool("isJump"))
+    //             anim.SetBool("isRun", true);
+    //     }
+    //     rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y);
+    // }
+
+
+    void Run(float horizontalInput)
     {
-        Vector2 moveVelocity = Vector2.zero;
-        anim.SetBool("isRun", false);
+        // move or set velocity to 0 when horizontalInput is 0)
+        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 
-        if (InputUtil.Left())
+        // animation
+        if (horizontalInput != 0f)
         {
-            direction = -1;
-            moveVelocity = Vector2.left;
-            transform.localScale = new Vector3(direction, 1, 1);
+            transform.localScale = new Vector3(Mathf.Sign(-horizontalInput), 1, 1); 
             if (!anim.GetBool("isJump"))
+            {
                 anim.SetBool("isRun", true);
+            }
         }
-        else if (InputUtil.Right())
+        else
         {
-            direction = 1;
-            moveVelocity = Vector2.right;
-            transform.localScale = new Vector3(direction, 1, 1);
-            if (!anim.GetBool("isJump"))
-                anim.SetBool("isRun", true);
+            anim.SetBool("isRun", false);
         }
 
-        rb.velocity = new Vector2(moveVelocity.x * movePower, rb.velocity.y);
     }
 
     void Jump()
@@ -112,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
         if (!anim.GetBool("isJump") && grounded)
         {
-            Debug.Log("Min height: " + minYPosition);
+            //Debug.Log("Min height: " + minYPosition);
             isJumping = true;
             anim.SetBool("isJump", true);
             rb.velocity = Vector2.up * jumpPower; // Jump
@@ -127,50 +137,12 @@ public class PlayerController : MonoBehaviour
 
         if (grounded && !wasGrounded) // Just landed
         {
-            Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
+            //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
             maxYPosition = transform.position.y;
             groundedTime = Time.time; // Set to time of impact when landing on ground layer
-            isJumping = false; 
+            isJumping = false;
             anim.SetBool("isJump", false);
 
-        }
-    }
-
-    void Attack()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            anim.SetTrigger("attack");
-        }
-    }
-
-    void Hurt()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            anim.SetTrigger("hurt");
-            if (direction == 1)
-                rb.AddForce(new Vector2(-5f, 1f), ForceMode2D.Impulse);
-            else
-                rb.AddForce(new Vector2(5f, 1f), ForceMode2D.Impulse);
-        }
-    }
-
-    void Die()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            anim.SetTrigger("die");
-            alive = false;
-        }
-    }
-
-    void Restart()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            anim.SetTrigger("idle");
-            alive = true;
         }
     }
 }

@@ -23,5 +23,11 @@ namespace Util
         {
             return Input.GetAxisRaw("Vertical") < 0 || Input.GetKey(KeyCode.DownArrow);
         }
+
+        public static float HorizontalInput() {
+            if(Right()) return 1f;
+            if (Left()) return -1f;
+            return 0f;
+        }
     }
 }
