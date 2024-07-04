@@ -106,12 +106,12 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(Mathf.Sign(-horizontalInput), 1, 1); 
             if (!anim.GetBool("isJump"))
             {
-                anim.SetBool("isRun", true);
+                anim.SetBool("isRunning", true);
             }
         }
         else
         {
-            anim.SetBool("isRun", false);
+            anim.SetBool("isRunning", false);
         }
 
     }
