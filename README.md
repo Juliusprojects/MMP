@@ -3,7 +3,7 @@
 ### Controls
 
 - **Movement:**
-  - **W** or **↑**: Move Up
+  - **W** or **↑**: Jump
   - **A** or **←**: Move Left
   - **D** or **→**: Move Right
 
