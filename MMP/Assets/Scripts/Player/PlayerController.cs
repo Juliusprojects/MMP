@@ -104,14 +104,14 @@ public class PlayerController : MonoBehaviour
         if (horizontalInput != 0f)
         {
             transform.localScale = new Vector3(Mathf.Sign(-horizontalInput), 1, 1); 
-            if (!anim.GetBool("isJump"))
-            {
-                anim.SetBool("isRunning", true);
+            if (!anim.GetBool("isJump2"))
+            {                
+                anim.SetBool("isRun2", true);             
             }
         }
         else
         {
-            anim.SetBool("isRunning", false);
+            anim.SetBool("isRun2", false);            
         }
 
     }
@@ -120,11 +120,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Time.time - groundedTime < jumpCooldown) return; // Check for jump cooldown
 
-        if (!anim.GetBool("isJump") && grounded)
+        if (!anim.GetBool("isJump2") && grounded)
         {
             //Debug.Log("Min height: " + minYPosition);
             isJumping = true;
-            anim.SetBool("isJump", true);
+            anim.SetBool("isJump2", true);
             rb.velocity = Vector2.up * jumpPower; // Jump
         }
     }
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
             maxYPosition = transform.position.y;
             groundedTime = Time.time; // Set to time of impact when landing on ground layer
             isJumping = false;
-            anim.SetBool("isJump", false);
+            anim.SetBool("isJump2", false);
 
         }
     }
