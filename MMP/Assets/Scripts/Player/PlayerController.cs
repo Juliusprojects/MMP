@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        anim = transform.Find("CharacterCrtl").GetComponent<Animator>();
         groundLayer = LayerMask.GetMask("Ground");
         groundCheck = transform.Find("GroundCheck");
         rb.interpolation = RigidbodyInterpolation2D.Interpolate; // after changing running to a velocity based method to check velocity on portal collision the character moved laggy without this
