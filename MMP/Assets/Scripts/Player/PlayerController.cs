@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour
         {
             //Debug.Log("Min height: " + minYPosition);
             isJumping = true;
+            anim.SetTrigger("takeoff");
             anim.SetBool("isJump2", true);
             rb.velocity = Vector2.up * jumpPower; // Jump
         }
