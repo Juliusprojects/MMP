@@ -25,7 +25,14 @@ public class PortalManagerController : MonoBehaviour
         }
 
         // Start with the portal deactivated
-        SetPortalActive(false);
+        try 
+        {
+            SetPortalActive(false);
+        } 
+        catch (UnassignedReferenceException e) 
+        { 
+            //if (!e.Message.Contains("Portal")) { throw e; };
+        }
     }
 
     void Update()
@@ -39,8 +46,7 @@ public class PortalManagerController : MonoBehaviour
 
     void TogglePortal()
     {
-        if (portal != null && player != null)
-        {
+
             if (portal.activeSelf)
             {
                 SetPortalActive(false);
@@ -53,10 +59,9 @@ public class PortalManagerController : MonoBehaviour
                 ResetChildPositions();
                 SetPortalActive(true);
             }
-        }
     }
 
-    void SetPortalActive(bool isActive)
+    private void SetPortalActive(bool isActive)
     {
         portal.SetActive(isActive);
     }

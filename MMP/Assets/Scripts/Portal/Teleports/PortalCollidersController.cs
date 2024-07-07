@@ -13,6 +13,10 @@ public class PortalCollidersController : MonoBehaviour
     public GameObject bottomPortal;
     public GameObject leftPortal;
     public GameObject rightPortal;
+    public BoxCollider2D topPortalCollider;
+    public BoxCollider2D bottomPortalCollider;
+    public BoxCollider2D leftPortalCollider;
+    public BoxCollider2D rightPortalCollider;
 
     void Start()
     {
@@ -46,10 +50,10 @@ public class PortalCollidersController : MonoBehaviour
         return colliderObject;
     }
 
-    void OnEnable()
-    {
-        PositionColliders();
-    }
+    // void OnEnable()
+    // {
+    //     PositionColliders();
+    // }
 
     void PositionColliders()
     {
@@ -65,23 +69,32 @@ public class PortalCollidersController : MonoBehaviour
         bottomPortal.GetComponent<BoxCollider2D>().size = new Vector2(cubeSize, 2);
         leftPortal.GetComponent<BoxCollider2D>().size = new Vector2(2, cubeSize);
         rightPortal.GetComponent<BoxCollider2D>().size = new Vector2(2, cubeSize);
+
+        topPortalCollider = topPortal.GetComponent<BoxCollider2D>();
+        topPortalCollider.size = new Vector2(cubeSize, 2);
+        bottomPortalCollider = bottomPortal.GetComponent<BoxCollider2D>();
+        bottomPortalCollider.size = new Vector2(cubeSize, 2);
+        leftPortalCollider = leftPortal.GetComponent<BoxCollider2D>();
+        leftPortalCollider.size = new Vector2(2, cubeSize);
+        rightPortalCollider = rightPortal.GetComponent<BoxCollider2D>();
+        rightPortalCollider.size = new Vector2(2, cubeSize);
     }
 
     public void TeleportPlayer(PortalSide portalSide)
     {
         Vector3 playerPosition = player.transform.position;
-        Collider2D playerCollider = player.GetComponent<Collider2D>();
+        float playerHeight = player.GetComponent<Collider2D>().bounds.size.y;
         switch (portalSide)
         {
             case PortalSide.Bottom:
-                float playerHeight = playerCollider.bounds.size.y;
-                float topPortalLowerBound = topPortal.GetComponent<BoxCollider2D>().bounds.min.y;
+                float topPortalLowerBound = topPortalCollider.bounds.min.y;
                 // Set the players new position so their lower bounds match the top portals lower bounds
                 // half player offset because normally player center is on lower bound portal
                 playerPosition.y = topPortalLowerBound + (playerHeight / 2);
                 break;
             case PortalSide.Top:
-                playerPosition.y = bottomPortal.transform.position.y;
+                // Set the players new position so their lower bounds match the bottom portals upper bounds
+                playerPosition.y = bottomPortalCollider.bounds.max.y + (playerHeight / 2);
                 break;
             case PortalSide.Left:
                 playerPosition.x = rightPortal.GetComponent<BoxCollider2D>().bounds.min.x;
@@ -142,64 +155,74 @@ public class PortalSideCollider : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        CheckForTeleport(other);
+        if (other.CompareTag("Player"))
+        {
+            CheckForTeleport(other);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        CheckForTeleport(other);
+        if (other.CompareTag("Player"))
+        {
+            CheckForTeleport(other);
+        }
     }
 
     void CheckForTeleport(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+
+        Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
+        if (rb == null) return;
+
+        Bounds playerBounds = other.bounds;
+        Bounds colliderBounds = GetComponent<Collider2D>().bounds;
+
+        float minVelocityThreshold = 0f;
+
+        Debug.Log("v y: " + rb.velocity.y);
+        Debug.Log("v x: " + rb.velocity.x);
+        Debug.Log("Portalside :" + portalSide);
+
+
+        switch (portalSide)
         {
-            Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
-            if (rb == null) return;
-
-            Bounds playerBounds = other.bounds;
-            Bounds colliderBounds = GetComponent<Collider2D>().bounds;
-
-            float minVelocityThreshold = 0f;
-
-            Debug.Log("v y: " + rb.velocity.y);
-            Debug.Log("v x: " + rb.velocity.x);
-            Debug.Log("Portalside :" + portalSide);
-
-
-            switch (portalSide)
-            {
-                case PortalSide.Bottom:
-                    //if (/* rb.velocity.y > minVelocityThreshold &&*/ colliderBounds.max.y - playerBounds.min.y >= portalController.topTeleportThreshold)
-                    //{
-                    //    portalController.TeleportPlayer(portalSide);
-                    //}
-                    if (rb.velocity.y >= minVelocityThreshold)
-                    {
-                        rb.velocity = new Vector2(rb.velocity.x, -0.1f);
-                    }
+            case PortalSide.Bottom:
+                //if (/* rb.velocity.y > minVelocityThreshold &&*/ colliderBounds.max.y - playerBounds.min.y >= portalController.topTeleportThreshold)
+                //{
+                //    portalController.TeleportPlayer(portalSide);
+                //}
+                // if (rb.velocity.y > 0)
+                // {
+                //     rb.velocity = new Vector2(rb.velocity.x, -0.1f);
+                // }
+                if (rb.velocity.y < 0)
+                {
                     portalController.TeleportPlayer(portalSide);
-                    break;
-                case PortalSide.Top:
-                    if (rb.velocity.y > minVelocityThreshold // moving at a min velocity into the portal
-                        && playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
-                    {
-                        portalController.TeleportPlayer(portalSide);
-                    }
-                    break;
-                case PortalSide.Left:
-                    if (rb.velocity.x < -minVelocityThreshold && colliderBounds.max.x - playerBounds.min.x >= portalController.horizontalTeleportThreshold)
-                    {
-                        portalController.TeleportPlayer(portalSide);
-                    }
-                    break;
-                case PortalSide.Right:
-                    if (rb.velocity.x > minVelocityThreshold && playerBounds.max.x - colliderBounds.min.x >= portalController.horizontalTeleportThreshold)
-                    {
-                        portalController.TeleportPlayer(portalSide);
-                    }
-                    break;
-            }
+                }
+
+                break;
+            case PortalSide.Top:
+                if (rb.velocity.y > minVelocityThreshold // moving at a min velocity into the portal
+                                                         //&& playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
+                    && playerBounds.min.y >= colliderBounds.min.y)
+                {
+                    portalController.TeleportPlayer(portalSide);
+                }
+                break;
+            case PortalSide.Left:
+                if (rb.velocity.x < -minVelocityThreshold && colliderBounds.max.x - playerBounds.min.x >= portalController.horizontalTeleportThreshold)
+                {
+                    portalController.TeleportPlayer(portalSide);
+                }
+                break;
+            case PortalSide.Right:
+                if (rb.velocity.x > minVelocityThreshold && playerBounds.max.x - colliderBounds.min.x >= portalController.horizontalTeleportThreshold)
+                {
+                    portalController.TeleportPlayer(portalSide);
+                }
+                break;
+
         }
     }
 }

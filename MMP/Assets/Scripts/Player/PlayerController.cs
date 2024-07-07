@@ -26,10 +26,6 @@ public class PlayerController : MonoBehaviour
     private bool grounded;
 
 
-    // DEBUG - remove later
-    private float maxYPosition = float.MinValue;
-    private float minYPosition = float.MaxValue;
-
 
     void Start()
     {
@@ -37,7 +33,11 @@ public class PlayerController : MonoBehaviour
         anim = transform.Find("CharacterCrtl").GetComponent<Animator>();
         groundLayer = LayerMask.GetMask("Ground");
         groundCheck = transform.Find("GroundCheck");
-        rb.interpolation = RigidbodyInterpolation2D.Interpolate; // after changing running to a velocity based method to check velocity on portal collision the character moved laggy without this
+        // after changing running to a velocity based method to check velocity on portal collision the character moved laggy without this
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        // finally this fixed a bug where the player would overlap a bit with colliders when colliding on high velocity and triggering the portal if its close behind the wall
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; 
+
         if (groundCheck == null)
         {
             Debug.LogError("GroundCheck transform not found. Please ensure there is a child object named GroundCheck");
@@ -46,12 +46,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y > maxYPosition) maxYPosition = transform.position.y;
-        if (transform.position.y < minYPosition) minYPosition = transform.position.y;
-
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
-        Run(InputUtil.HorizontalInput());
+        Move(InputUtil.HorizontalInput());
     }
 
 
@@ -75,27 +72,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    // void Run(float x)
-    // {
-    //     anim.SetBool("isRun", false);
 
-    //     if (InputUtil.Left())
-    //     {
-    //         transform.localScale = new Vector3(x, 1, 1);
-    //         if (!anim.GetBool("isJump"))
-    //             anim.SetBool("isRun", true);
-    //     }
-    //     else if (InputUtil.Right())
-    //     {
-    //         transform.localScale = new Vector3(x, 1, 1);
-    //         if (!anim.GetBool("isJump"))
-    //             anim.SetBool("isRun", true);
-    //     }
-    //     rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y);
-    // }
-
-
-    void Run(float horizontalInput)
+    void Move(float horizontalInput)
     {
         // move or set velocity to 0 when horizontalInput is 0)
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
@@ -139,7 +117,6 @@ public class PlayerController : MonoBehaviour
         if (grounded && !wasGrounded) // Just landed
         {
             //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
-            maxYPosition = transform.position.y;
             groundedTime = Time.time; // Set to time of impact when landing on ground layer
             isJumping = false;
             anim.SetBool("isJump2", false);
