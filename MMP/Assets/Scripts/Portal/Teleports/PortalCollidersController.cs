@@ -157,7 +157,7 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            CheckForTeleport(other);
+            HandleTeleport(other);
         }
     }
 
@@ -165,11 +165,11 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            CheckForTeleport(other);
+            HandleTeleport(other);
         }
     }
 
-    void CheckForTeleport(Collider2D other)
+    void HandleTeleport(Collider2D other)
     {
 
         Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
