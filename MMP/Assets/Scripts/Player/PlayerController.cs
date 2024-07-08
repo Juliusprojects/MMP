@@ -108,21 +108,41 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // void CheckGrounded()
+    // {
+    //     RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+    //     bool wasGrounded = grounded;
+    //     grounded = hit.collider != null; // Sets grounded to true if the ray hits the ground layer
+
+    //     if (grounded && !wasGrounded) // Just landed
+    //     {
+    //         //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
+    //         groundedTime = Time.time; // Set to time of impact when landing on ground layer
+    //         isJumping = false;
+    //         anim.SetBool("isJump2", false);
+
+    //     }
+    // }
     void CheckGrounded()
+{
+    ContactFilter2D contactFilter = new ContactFilter2D();
+    contactFilter.useTriggers = false; 
+
+    RaycastHit2D[] hits = new RaycastHit2D[1];
+    int hitCount = Physics2D.Raycast(groundCheck.position, Vector2.down, contactFilter, hits, groundCheckDistance);
+
+    bool wasGrounded = grounded;
+    grounded = hitCount > 0 && hits[0].collider != null; // Sets grounded to true if the ray hits a non-trigger collider
+
+    if (grounded && !wasGrounded) // Just landed
     {
-        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-        bool wasGrounded = grounded;
-        grounded = hit.collider != null; // Sets grounded to true if the ray hits the ground layer
-
-        if (grounded && !wasGrounded) // Just landed
-        {
-            //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
-            groundedTime = Time.time; // Set to time of impact when landing on ground layer
-            isJumping = false;
-            anim.SetBool("isJump2", false);
-
-        }
+        //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
+        groundedTime = Time.time; 
+        isJumping = false;
+        anim.SetBool("isJump2", false);
     }
+}
+
 }
 
 

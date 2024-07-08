@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PortalCollidersController : MonoBehaviour
@@ -6,8 +9,8 @@ public class PortalCollidersController : MonoBehaviour
     public float verticalOffset = 0f;
     public float horizontalOffset = 0f;
     public float cubeSize = 22f;
-    public float horizontalTeleportThreshold = 0.5f;
-    public float topTeleportThreshold = 3.5f; // will probably be player height
+    // public float horizontalTeleportThreshold = 0.5f;
+    // public float topTeleportThreshold = 3.5f; // will probably be player height
 
     public GameObject topPortal;
     public GameObject bottomPortal;
@@ -18,7 +21,14 @@ public class PortalCollidersController : MonoBehaviour
     public BoxCollider2D leftPortalCollider;
     public BoxCollider2D rightPortalCollider;
 
-    void Start()
+    private List<PortalSideCollider> portalSides = new();
+    private List<BoxCollider2D> portalColliders = new();
+
+    public GameObject PortalArea { get; private set; }
+    public GameObject OuterPortalArea { get; private set; }
+
+
+    void Awake()
     {
         player = GameObject.FindWithTag("Player");
         if (player == null)
@@ -27,48 +37,46 @@ public class PortalCollidersController : MonoBehaviour
             return;
         }
 
-        InitializeColliders();
-        PositionColliders();
+
+        portalColliders = PortalIinit().Select(p => p.GetComponent<BoxCollider2D>()).ToList();
+        PositionPortalColliders();
+
+        ForceUpdateColliderBounds();
+        PortalArea = PortalAreaInit();
+        OuterPortalArea = OuterPortalAreaInit();
+
     }
 
-    void InitializeColliders()
+    void Update()
     {
-        topPortal = CreateCollider("PortalTopCollider", PortalSide.Top);
-        bottomPortal = CreateCollider("PortalBottomCollider", PortalSide.Bottom);
-        leftPortal = CreateCollider("PortalLeftCollider", PortalSide.Left);
-        rightPortal = CreateCollider("PortalRightCollider", PortalSide.Right);
+        // bottomPortalCollider.isTrigger = true;
+        // topPortalCollider.isTrigger = true;
+        // leftPortalCollider.isTrigger = true;
+        // rightPortalCollider.isTrigger = true;
     }
 
-    GameObject CreateCollider(string name, PortalSide direction)
+    void ForceUpdateColliderBounds()
     {
-        GameObject colliderObject = new GameObject(name);
-        BoxCollider2D collider = colliderObject.AddComponent<BoxCollider2D>();
-        collider.isTrigger = true;
-        PortalSideCollider sideCollider = colliderObject.AddComponent<PortalSideCollider>();
-        sideCollider.Initialize(this, direction);
-        colliderObject.transform.parent = transform;
-        return colliderObject;
+        topPortalCollider.enabled = false;
+        topPortalCollider.enabled = true;
+
+        bottomPortalCollider.enabled = false;
+        bottomPortalCollider.enabled = true;
+
+        leftPortalCollider.enabled = false;
+        leftPortalCollider.enabled = true;
+
+        rightPortalCollider.enabled = false;
+        rightPortalCollider.enabled = true;
     }
 
-    // void OnEnable()
-    // {
-    //     PositionColliders();
-    // }
-
-    void PositionColliders()
+    #region portal colliders
+    private List<GameObject> PortalIinit()
     {
-        float halfSize = cubeSize / 2f;
-
-        topPortal.transform.localPosition = new Vector3(0, halfSize + verticalOffset, 0);
-        bottomPortal.transform.localPosition = new Vector3(0, -(halfSize + verticalOffset), 0);
-        leftPortal.transform.localPosition = new Vector3(-(halfSize + horizontalOffset), 0, 0);
-        rightPortal.transform.localPosition = new Vector3(halfSize + horizontalOffset, 0, 0);
-
-        // Only here so it resets properly when cubeSize is changed in inspector
-        topPortal.GetComponent<BoxCollider2D>().size = new Vector2(cubeSize, 2);
-        bottomPortal.GetComponent<BoxCollider2D>().size = new Vector2(cubeSize, 2);
-        leftPortal.GetComponent<BoxCollider2D>().size = new Vector2(2, cubeSize);
-        rightPortal.GetComponent<BoxCollider2D>().size = new Vector2(2, cubeSize);
+        topPortal = CreatePortalCollider("PortalTopCollider", PortalSide.Top);
+        bottomPortal = CreatePortalCollider("PortalBottomCollider", PortalSide.Bottom);
+        leftPortal = CreatePortalCollider("PortalLeftCollider", PortalSide.Left);
+        rightPortal = CreatePortalCollider("PortalRightCollider", PortalSide.Right);
 
         topPortalCollider = topPortal.GetComponent<BoxCollider2D>();
         topPortalCollider.size = new Vector2(cubeSize, 2);
@@ -81,6 +89,64 @@ public class PortalCollidersController : MonoBehaviour
 
         rightPortalCollider = rightPortal.GetComponent<BoxCollider2D>();
         rightPortalCollider.size = new Vector2(2, cubeSize);
+
+        return new List<GameObject>() { topPortal, bottomPortal, leftPortal, rightPortal };
+    }
+
+    GameObject CreatePortalCollider(string name, PortalSide direction)
+    {
+        GameObject colliderObject = new GameObject(name);
+        BoxCollider2D collider = colliderObject.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+        PortalSideCollider sideCollider = colliderObject.AddComponent<PortalSideCollider>();
+        sideCollider.Initialize(this, direction);
+        portalSides.Add(sideCollider);
+        colliderObject.transform.parent = transform;
+        return colliderObject;
+    }
+
+    // void OnEnable()
+    // {
+    //     PositionColliders();
+    // }
+
+    void PositionPortalColliders()
+    {
+        float halfSize = cubeSize / 2f;
+
+        topPortal.transform.localPosition = new Vector3(0, halfSize + verticalOffset, 0);
+        bottomPortal.transform.localPosition = new Vector3(0, -(halfSize + verticalOffset), 0);
+        leftPortal.transform.localPosition = new Vector3(-(halfSize + horizontalOffset), 0, 0);
+        rightPortal.transform.localPosition = new Vector3(halfSize + horizontalOffset, 0, 0);
+    }
+
+
+    #endregion
+
+    GameObject PortalAreaInit()
+    {
+        float width = rightPortalCollider.bounds.min.x - leftPortalCollider.bounds.max.x;
+        float height = topPortalCollider.bounds.min.y - bottomPortalCollider.bounds.max.y;
+        GameObject portalArea = new GameObject("PortalArea");
+        BoxCollider2D portalAreaCollider = portalArea.AddComponent<BoxCollider2D>();
+        portalAreaCollider.size = new Vector2(width, height);
+        portalAreaCollider.isTrigger = true;
+        portalArea.transform.position = transform.position;
+        portalArea.transform.parent = transform;
+        return portalArea;
+    }
+
+    GameObject OuterPortalAreaInit()
+    {
+        float width = 2 * (rightPortalCollider.bounds.min.x - leftPortalCollider.bounds.max.x);
+        float height = 2 * (topPortalCollider.bounds.min.y - bottomPortalCollider.bounds.max.y);
+        GameObject portalArea = new GameObject("OuterPortalArea");
+        BoxCollider2D portalAreaCollider = portalArea.AddComponent<BoxCollider2D>();
+        portalAreaCollider.size = new Vector2(width, height);
+        portalAreaCollider.isTrigger = true;
+        portalArea.transform.position = transform.position;
+        portalArea.transform.parent = transform;
+        return portalArea;
     }
 
     public void TeleportPlayer(PortalSide portalSide)
@@ -90,26 +156,164 @@ public class PortalCollidersController : MonoBehaviour
         switch (portalSide)
         {
             case PortalSide.Bottom:
-                float topPortalLowerBound = topPortalCollider.bounds.min.y;
                 // Set the players new position so their lower bounds match the top portals lower bounds
                 // half player offset because normally player center is on lower bound portal
-                playerPosition.y = topPortalLowerBound + (playerHeight / 2);
+                playerPosition.y = topPortalCollider.bounds.min.y;//+ (playerHeight / 2);
                 break;
             case PortalSide.Top:
                 // Set the players new position so their lower bounds match the bottom portals upper bounds
                 playerPosition.y = bottomPortalCollider.bounds.max.y + (playerHeight / 2);
                 break;
             case PortalSide.Left:
-                playerPosition.x = rightPortal.GetComponent<BoxCollider2D>().bounds.min.x;
+                playerPosition.x = rightPortalCollider.bounds.min.x;
                 break;
             case PortalSide.Right:
-                playerPosition.x = leftPortal.GetComponent<BoxCollider2D>().bounds.max.x;
+                playerPosition.x = leftPortalCollider.bounds.max.x;
                 break;
         }
 
         player.transform.position = playerPosition;
         Debug.Log("Teleported player to: " + playerPosition);
     }
+
+
+    GameObject PlayerCloneInit()
+    {
+        var playerCollider = player.transform.GetComponent<Collider2D>();
+        float width = playerCollider.bounds.size.x;
+        float height = playerCollider.bounds.size.y;
+        GameObject clone = new GameObject("clone");
+        BoxCollider2D cloneCollider = clone.AddComponent<BoxCollider2D>();
+        cloneCollider.size = new Vector2(width, height);
+        cloneCollider.isTrigger = true;
+        clone.transform.position = transform.position;
+        return clone;
+    }
+
+
+    // public bool CanTeleport(PortalSide portalSide, Vector3 playerPosition)
+    // {
+    //     //return true;
+    //     // Create a temporary GameObject with the same bounds as the player
+    //     GameObject tempObject = PlayerCloneInit();
+    //     Collider2D playerCollider = player.GetComponent<Collider2D>();
+    //     BoxCollider2D tempCollider = tempObject.GetComponent<BoxCollider2D>();
+    //     tempCollider.size = playerCollider.bounds.size;
+    //     Vector3 newPosition = playerPosition;
+
+    //     float playerHeight = playerCollider.bounds.size.y;
+    //     switch (portalSide)
+    //     {
+    //         case PortalSide.Bottom:
+    //             newPosition.y = topPortalCollider.bounds.min.y + (playerHeight / 2);
+    //             break;
+    //         case PortalSide.Top:
+    //             newPosition.y = bottomPortalCollider.bounds.max.y + (playerHeight / 2);
+    //             break;
+    //         case PortalSide.Left:
+    //             newPosition.x = rightPortalCollider.bounds.min.x;
+    //             break;
+    //         case PortalSide.Right:
+    //             newPosition.x = leftPortalCollider.bounds.max.x;
+    //             break;
+    //     }
+
+    //     // Move temporary object to the new position
+    //     tempObject.transform.position = newPosition;
+
+    //     //force load colliders
+    //     tempCollider.enabled = false;
+    //     tempCollider.enabled = true;
+
+    //     // Debug.Log($"Temp object position: {tempObject.transform.position}");
+    //     // Debug.Log($"Player object position: {playerPosition}");
+    //     // Debug.Log($"Temp object size: {tempCollider.bounds.size}");
+    //     // Debug.Log($"Player object size: {playerCollider.bounds.size}");
+
+    //     // Check for collisions
+    //     List<Collider2D> results = new List<Collider2D>();
+    //     ContactFilter2D filter = new ContactFilter2D();
+    //     filter.useTriggers = false;
+    //     int collisionCount = tempObject.GetComponent<BoxCollider2D>().OverlapCollider(filter, results);
+    //     //Debug.Log($"Number of collisions detected: {collisionCount}");
+    //     Destroy(tempObject);
+    //     List<Collider2D> results = new List<Collider2D>();
+    //     return !overlaps;
+    // }
+
+    public bool CanTeleport(PortalSide portalSide, Vector3 playerPosition)
+    {
+        Collider2D playerCollider = player.GetComponent<Collider2D>();
+        Vector3 newPosition = playerPosition;
+
+        Vector2 areaStart = Vector2.zero;
+        Vector2 areaEnd = Vector2.zero;
+
+        switch (portalSide)
+        {
+            case PortalSide.Bottom:
+                newPosition.y = topPortalCollider.bounds.min.y;
+                areaStart = new Vector2(playerCollider.bounds.min.x, newPosition.y);
+                areaEnd = new Vector2(playerCollider.bounds.max.x, newPosition.y);
+                break;
+            case PortalSide.Top:
+                newPosition.y = bottomPortalCollider.bounds.max.y;
+                areaStart = new Vector2(playerCollider.bounds.min.x, newPosition.y);
+                areaEnd = new Vector2(playerCollider.bounds.max.x, newPosition.y);
+                break;
+            case PortalSide.Left:
+                newPosition.x = rightPortalCollider.bounds.min.x;
+                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y);
+                areaEnd = new Vector2(newPosition.x, playerCollider.bounds.max.y);
+                break;
+            case PortalSide.Right:
+                newPosition.x = leftPortalCollider.bounds.max.x;
+                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y);
+                areaEnd = new Vector2(newPosition.x, playerCollider.bounds.max.y);
+                break;
+        }
+
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useTriggers = false;
+
+        List<Collider2D> results = new List<Collider2D>();
+        Physics2D.OverlapArea(areaStart, areaEnd, filter, results);
+
+        List<Collider2D> realresults = results.Where(r => !portalColliders.Select(p => p.name).Contains(r.name)).ToList();
+        bool overlaps = realresults.Any();
+        if (portalSide == PortalSide.Right)
+        {
+            Debug.Log($"New position: {newPosition}");
+            Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
+            Debug.Log($"Number of collisions detected: {results.Count}");
+            Debug.Log($"Number of actual collisions detected: {realresults.Count}");
+            Debug.Log($"names: {portalColliders.First().name}");
+        }
+
+        switch (portalSide)
+        {
+            case PortalSide.Bottom:
+                bottomPortalCollider.isTrigger = !overlaps || portalSide != PortalSide.Bottom;
+                break;
+            case PortalSide.Top:
+                topPortalCollider.isTrigger = !overlaps || portalSide != PortalSide.Top;
+                break;
+            case PortalSide.Left:
+                leftPortalCollider.isTrigger = !overlaps || portalSide != PortalSide.Left;
+                break;
+            case PortalSide.Right:
+                rightPortalCollider.isTrigger = !overlaps || portalSide != PortalSide.Right;
+                break;
+        }
+
+
+        return !overlaps;
+    }
+
+
+
+
+
 
     void OnDrawGizmos()
     {
@@ -148,7 +352,7 @@ public enum PortalSide
 public class PortalSideCollider : MonoBehaviour
 {
     private PortalCollidersController portalController;
-    private PortalSide portalSide;
+    public PortalSide portalSide;
 
     public void Initialize(PortalCollidersController controller, PortalSide side)
     {
@@ -160,7 +364,7 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            HandleTeleport(other);
+            if (portalController.CanTeleport(portalSide, other.GetComponent<Collider2D>().transform.position)) HandleTeleport(other);
         }
     }
 
@@ -168,17 +372,42 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            HandleTeleport(other);
+            if (portalController.CanTeleport(portalSide, other.GetComponent<Collider2D>().transform.position)) HandleTeleport(other);
         }
     }
 
-    void HandleTeleport(Collider2D other)
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            if (portalController.CanTeleport(portalSide, collision.collider.transform.position)) HandleTeleport(collision.collider);
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            if (portalController.CanTeleport(portalSide, collision.collider.transform.position)) HandleTeleport(collision.collider);
+        }
+    }
+
+    // void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     if (collision.collider.CompareTag("Player"))
+    //     {
+    //         Collider2D playerCollider = collision.collider.GetComponent<Collider2D>();
+    //         portalController.CanTeleport(portalSide, playerCollider.transform.position);
+    //     }
+    // }
+
+    void HandleTeleport(Collider2D playerCollider)
     {
 
-        Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
+        Rigidbody2D rb = playerCollider.GetComponent<Rigidbody2D>();
         if (rb == null) return;
 
-        Bounds playerBounds = other.bounds;
+        Bounds playerBounds = playerCollider.bounds;
         Bounds colliderBounds = GetComponent<Collider2D>().bounds;
 
         float minVelocityThreshold = 0f;

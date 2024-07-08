@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Util
@@ -28,6 +29,11 @@ namespace Util
             if(Right()) return 1f;
             if (Left()) return -1f;
             return 0f;
+        }
+
+        public static bool Portal()
+        {
+            return Input.GetKeyDown(KeyCode.Space);
         }
     }
 }
