@@ -263,12 +263,12 @@ public class PortalCollidersController : MonoBehaviour
                 break;
             case PortalSide.Left:
                 newPosition.x = rightPortalCollider.bounds.min.x;
-                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y);
+                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y + 0.1f); // adding 0.1 so the ground on the other side doesnt block teleport
                 areaEnd = new Vector2(newPosition.x, playerCollider.bounds.max.y);
                 break;
             case PortalSide.Right:
                 newPosition.x = leftPortalCollider.bounds.max.x;
-                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y);
+                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y + 0.1f);
                 areaEnd = new Vector2(newPosition.x, playerCollider.bounds.max.y);
                 break;
         }
@@ -281,14 +281,13 @@ public class PortalCollidersController : MonoBehaviour
 
         List<Collider2D> realresults = results.Where(r => !portalColliders.Select(p => p.name).Contains(r.name)).ToList();
         bool overlaps = realresults.Any();
-        if (portalSide == PortalSide.Right)
-        {
-            Debug.Log($"New position: {newPosition}");
-            Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
-            Debug.Log($"Number of collisions detected: {results.Count}");
-            Debug.Log($"Number of actual collisions detected: {realresults.Count}");
-            Debug.Log($"names: {portalColliders.First().name}");
-        }
+
+        Debug.Log($"New position: {newPosition}");
+        Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
+        Debug.Log($"Number of collisions detected: {results.Count}");
+        Debug.Log($"Number of actual collisions detected: {realresults.Count}");
+        Debug.Log($"names: {portalColliders.First().name}");
+
 
         switch (portalSide)
         {
