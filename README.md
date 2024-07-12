@@ -6,14 +6,8 @@
   - **W** or **↑**: Jump
   - **A** or **←**: Move Left
   - **D** or **→**: Move Right
+  - **S** or **↓**: Open Portal
 
-- **Action:**
-  - **Space**: Open Portal
-
-
-### To-Dos
-
-- Option
-  - Jump: use Space and/or Up
-  - Protal: use Space and/or Down
+- **Option:**
+  - **Space**: for Jump or Portal
   
