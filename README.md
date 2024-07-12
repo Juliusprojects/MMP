@@ -9,3 +9,11 @@
 
 - **Action:**
   - **Space**: Open Portal
+
+
+### To-Dos
+
+- Option
+  - Jump: use Space and/or Up
+  - Protal: use Space and/or Down
+  

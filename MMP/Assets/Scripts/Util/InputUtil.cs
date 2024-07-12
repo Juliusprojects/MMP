@@ -5,6 +5,12 @@ namespace Util
 {
     public static class InputUtil
     {
+        private static bool useSpaceForJump = true; 
+
+        public static void SetUseSpaceForJump(bool useForJump)
+        {
+            useSpaceForJump = useForJump;
+        }
         public static bool Left()
         {
             return Input.GetAxisRaw("Horizontal") < 0 || Input.GetKey(KeyCode.LeftArrow);
@@ -17,12 +23,12 @@ namespace Util
 
         public static bool Up()
         {
-            return Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0;
+            return Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0 || (useSpaceForJump && Input.GetKeyDown(KeyCode.Space));
         }
 
         public static bool Down()
         {
-            return Input.GetAxisRaw("Vertical") < 0 || Input.GetKey(KeyCode.DownArrow);
+            return Input.GetKeyDown(KeyCode.S) || Input.GetAxisRaw("Vertical") < 0 || Input.GetKey(KeyCode.DownArrow);
         }
 
         public static float HorizontalInput() {
@@ -33,7 +39,7 @@ namespace Util
 
         public static bool Portal()
         {
-            return Input.GetKeyDown(KeyCode.Space);
+            return Down() || (!useSpaceForJump && Input.GetKeyDown(KeyCode.Space));
         }
     }
 }
