@@ -8,6 +8,11 @@ public class Collection : MonoBehaviour
     public bool isPickedUp;
     private Vector2 vel;
     public float smoothTime;
+
+    public float xOffset;
+    public float yOffset;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +24,8 @@ public class Collection : MonoBehaviour
     {
         if (isPickedUp)
         {
-            transform.position = Vector2.SmoothDamp(transform.position, player.transform.position, ref vel, smoothTime);
+            Vector3 offset = new Vector3(xOffset, yOffset, 0);
+            transform.position = Vector2.SmoothDamp(transform.position, player.transform.position + offset, ref vel, smoothTime);
         }
     }
 
