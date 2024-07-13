@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
         if (!Mathf.Approximately(0, Input.GetAxis("Horizontal"))) transform.rotation = Input.GetAxis("Horizontal") > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
         if (Input.GetButtonDown("Fire1"))
         {
+            anim.SetTrigger("attack");
             Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
         }
     }
