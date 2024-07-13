@@ -25,7 +25,9 @@ public class PlayerController : MonoBehaviour
     private float groundedTime = 0f; // Time of impact when landing on ground layer
     private bool grounded;
 
-
+    //projectileStuff
+    public LaunchProjectile ProjectilePrefab;
+    public Transform LaunchOffset;
 
     void Start()
     {
@@ -49,6 +51,11 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
         Move(InputUtil.HorizontalInput());
+        if (!Mathf.Approximately(0, Input.GetAxis("Horizontal"))) transform.rotation = Input.GetAxis("Horizontal") > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
+        }
     }
 
 
@@ -81,7 +88,7 @@ public class PlayerController : MonoBehaviour
         // animation
         if (horizontalInput != 0f)
         {
-            transform.localScale = new Vector3(Mathf.Sign(-horizontalInput), 1, 1); 
+            //transform.localScale = new Vector3(Mathf.Sign(-horizontalInput), 1, 1); 
             if (!anim.GetBool("isJump2"))
             {                
                 anim.SetBool("isRun2", true);             
@@ -124,25 +131,24 @@ public class PlayerController : MonoBehaviour
     //     }
     // }
     void CheckGrounded()
-{
-    ContactFilter2D contactFilter = new ContactFilter2D();
-    contactFilter.useTriggers = false; 
-
-    RaycastHit2D[] hits = new RaycastHit2D[1];
-    int hitCount = Physics2D.Raycast(groundCheck.position, Vector2.down, contactFilter, hits, groundCheckDistance);
-
-    bool wasGrounded = grounded;
-    grounded = hitCount > 0 && hits[0].collider != null; // Sets grounded to true if the ray hits a non-trigger collider
-
-    if (grounded && !wasGrounded) // Just landed
     {
+        ContactFilter2D contactFilter = new ContactFilter2D();
+        contactFilter.useTriggers = false; 
+
+        RaycastHit2D[] hits = new RaycastHit2D[1];
+        int hitCount = Physics2D.Raycast(groundCheck.position, Vector2.down, contactFilter, hits, groundCheckDistance);
+
+        bool wasGrounded = grounded;
+        grounded = hitCount > 0 && hits[0].collider != null; // Sets grounded to true if the ray hits a non-trigger collider
+
+        if (grounded && !wasGrounded) // Just landed
+        {
         //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
         groundedTime = Time.time; 
         isJumping = false;
         anim.SetBool("isJump2", false);
+        }
     }
-}
-
 }
 
 
