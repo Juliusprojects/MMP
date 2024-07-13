@@ -5,12 +5,11 @@ using UnityEngine;
 public class Collection : MonoBehaviour
 {
     [SerializeField] GameObject player;
-    public bool isPickedUp;
+    private bool isPickedUp;
     private Vector2 vel;
     public float smoothTime;
     public float xOffset;
     public float yOffset;
-
     public float dynamicOffsetVar = 3;
 
 
@@ -28,11 +27,7 @@ public class Collection : MonoBehaviour
 
             Vector3 initialOffset = new Vector3(xOffset, yOffset, 0);
 
-            Vector3 dynamicOffset = initialOffset + new Vector3(
-                Mathf.Sin(Time.time * dynamicOffsetVar),
-                Mathf.Cos(Time.time * dynamicOffsetVar),
-                0
-            );
+            Vector3 dynamicOffset = initialOffset + new Vector3(Mathf.Sin(Time.time * dynamicOffsetVar), Mathf.Cos(Time.time * dynamicOffsetVar), 0);
 
             //Vector3 initialOffset = new Vector3(xOffset, yOffset, 0);
             transform.position = Vector2.SmoothDamp(transform.position, player.transform.position + dynamicOffset, ref vel, smoothTime);
@@ -44,6 +39,7 @@ public class Collection : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && !isPickedUp)
         {
             isPickedUp = true;
+            FireflyManager.instance.FireflyCollected();
         }
     }
 }
