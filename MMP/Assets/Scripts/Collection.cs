@@ -8,9 +8,10 @@ public class Collection : MonoBehaviour
     public bool isPickedUp;
     private Vector2 vel;
     public float smoothTime;
-
     public float xOffset;
     public float yOffset;
+
+    public float dynamicOffsetVar = 3;
 
 
     // Start is called before the first frame update
@@ -24,8 +25,17 @@ public class Collection : MonoBehaviour
     {
         if (isPickedUp)
         {
-            Vector3 offset = new Vector3(xOffset, yOffset, 0);
-            transform.position = Vector2.SmoothDamp(transform.position, player.transform.position + offset, ref vel, smoothTime);
+
+            Vector3 initialOffset = new Vector3(xOffset, yOffset, 0);
+
+            Vector3 dynamicOffset = initialOffset + new Vector3(
+                Mathf.Sin(Time.time * dynamicOffsetVar),
+                Mathf.Cos(Time.time * dynamicOffsetVar),
+                0
+            );
+
+            //Vector3 initialOffset = new Vector3(xOffset, yOffset, 0);
+            transform.position = Vector2.SmoothDamp(transform.position, player.transform.position + dynamicOffset, ref vel, smoothTime);
         }
     }
 
