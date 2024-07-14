@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
         Move(InputUtil.HorizontalInput());
         if (Input.GetButtonDown("Fire1"))
         {
+            anim.SetTrigger("attack");
             Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
         }
     }
