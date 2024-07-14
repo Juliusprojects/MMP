@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 6f;
     public float lowJumpMultiplier = 9f;
     public float jumpCooldown = 0.13f;
+    public ParticleSystem particleSystem;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             anim.SetTrigger("attack");
+            particleSystem.Play();
             Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
         }
     }
