@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Util;
 
+
 public class PortalManagerController : MonoBehaviour
 {
     public GameObject portal;
@@ -19,6 +20,7 @@ public class PortalManagerController : MonoBehaviour
     PortalCollidersController PortalCollidersController;
     private List<Collider2D> disabledCollidersForPlayer = new List<Collider2D>();
 
+    public AudioSource audioSource;
     void Start()
     {
         player = GameObject.FindWithTag("Player");
@@ -36,8 +38,13 @@ public class PortalManagerController : MonoBehaviour
         PortalCollidersController = FindObjectOfType<PortalCollidersController>();
         portalArea = PortalCollidersController.PortalArea;
         outerPortalArea = PortalCollidersController.OuterPortalArea;
-
+        audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                Debug.LogError("AudioSource component not found on the GameObject!");
+            }
         SetPortalActive(false); // Start with the portal deactivated
+
     }
 
     void Update()
@@ -70,6 +77,14 @@ public class PortalManagerController : MonoBehaviour
     private void SetPortalActive(bool isActive)
     {
         portal.SetActive(isActive);
+        if (isActive)
+        {
+            audioSource.Play(); 
+        }
+        else
+        {
+            audioSource.Stop();  
+        }
     }
 
     void ResetChildPositions()
