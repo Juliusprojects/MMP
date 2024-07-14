@@ -87,7 +87,6 @@ public class PlayerController : MonoBehaviour
 
         //transform.rotation = horizontalInput > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
 
-        
         Quaternion targetRotation = transform.rotation;
         if (horizontalInput > 0) {
             targetRotation = Quaternion.Euler(0, 180, 0);
@@ -143,6 +142,8 @@ public class PlayerController : MonoBehaviour
 
     //     }
     // }
+
+    
     void CheckGrounded()
     {
         ContactFilter2D contactFilter = new ContactFilter2D();

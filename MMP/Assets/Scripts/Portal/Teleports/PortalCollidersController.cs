@@ -52,6 +52,31 @@ public class PortalCollidersController : MonoBehaviour
     List<GameObject> extraBoxes = new List<GameObject>();
     void OnEnable()
     {
+        CreateOpposingColliders();
+    }
+
+    void OnDisable()
+    {
+        foreach (var b in extraBoxes)
+        {
+            Destroy(b);
+        }
+    }
+
+    #region mirrors
+
+    public void CreateMirror() {
+        
+        SpriteRenderer playerSprite = player.GetComponent<SpriteRenderer>();
+        GameObject leftMirror = new GameObject("leftReflection");
+        
+    }
+
+    #endregion
+
+    #region opposingColliders
+    public void CreateOpposingColliders()
+    {
         List<Bounds> topPortalCollisionBounds = GetCollisionBoundsForTopPortal();
         foreach (var bounds in topPortalCollisionBounds)
         {
@@ -72,14 +97,6 @@ public class PortalCollidersController : MonoBehaviour
         foreach (Bounds b in bottomPortalCollisionBounds)
         {
             extraBoxes.Add(AddBoxCollider(b.min.x, b.max.x, topPortalCollider.bounds.min.y, topPortalCollider.bounds.max.y));
-        }
-    }
-
-    void OnDisable()
-    {
-        foreach (var b in extraBoxes)
-        {
-            Destroy(b);
         }
     }
 
@@ -130,7 +147,7 @@ public class PortalCollidersController : MonoBehaviour
     }
 
 
-
+    #endregion
 
     #region portal colliders
 
@@ -484,9 +501,10 @@ public class PortalSideCollider : MonoBehaviour
         }
     }
 
-    // public void Update() {
-    //     portalController.ResetPortalTriggers();
-    // }
+    public void Update()
+    {
+        portalController.topPortalCollider.isTrigger = true;
+    }
 
     // void OnCollisionEnter2D(Collision2D collision)
     // {
