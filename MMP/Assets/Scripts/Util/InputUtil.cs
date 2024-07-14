@@ -5,7 +5,7 @@ namespace Util
 {
     public static class InputUtil
     {
-        private static bool useSpaceForJump = true; 
+        private static bool useSpaceForJump = false; 
 
         public static void SetUseSpaceForJump(bool useForJump)
         {

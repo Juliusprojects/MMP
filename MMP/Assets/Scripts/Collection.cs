@@ -24,8 +24,9 @@ public class Collection : MonoBehaviour
     {
         if (isPickedUp)
         {
-
-            Vector3 initialOffset = new Vector3(xOffset, yOffset, 0);
+            var playerRotation = player.transform.rotation.y;
+            float x = playerRotation == 0 ? -xOffset : xOffset;
+            Vector3 initialOffset = new Vector3(x, yOffset, 0);
 
             Vector3 dynamicOffset = initialOffset + new Vector3(Mathf.Sin(Time.time * dynamicOffsetVar), Mathf.Cos(Time.time * dynamicOffsetVar), 0);
 

@@ -51,7 +51,6 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
         Move(InputUtil.HorizontalInput());
-        if (!Mathf.Approximately(0, Input.GetAxis("Horizontal"))) transform.rotation = Input.GetAxis("Horizontal") > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
         if (Input.GetButtonDown("Fire1"))
         {
             Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
@@ -82,6 +81,17 @@ public class PlayerController : MonoBehaviour
 
     void Move(float horizontalInput)
     {
+
+        //transform.rotation = horizontalInput > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
+
+        
+        Quaternion targetRotation = transform.rotation;
+        if (horizontalInput > 0) {
+            targetRotation = Quaternion.Euler(0, 180, 0);
+        } else if (horizontalInput < 0) {
+            targetRotation = Quaternion.Euler(0, 0, 0);
+        }
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
         // move or set velocity to 0 when horizontalInput is 0)
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 

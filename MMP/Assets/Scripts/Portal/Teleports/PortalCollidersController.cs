@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -45,15 +46,93 @@ public class PortalCollidersController : MonoBehaviour
         PortalArea = PortalAreaInit();
         OuterPortalArea = OuterPortalAreaInit();
 
+
     }
 
-    void Update()
+    List<GameObject> extraBoxes = new List<GameObject>();
+    void OnEnable()
     {
-        // bottomPortalCollider.isTrigger = true;
-        // topPortalCollider.isTrigger = true;
-        // leftPortalCollider.isTrigger = true;
-        // rightPortalCollider.isTrigger = true;
+        List<Bounds> topPortalCollisionBounds = GetCollisionBoundsForTopPortal();
+        foreach (var bounds in topPortalCollisionBounds)
+        {
+            Debug.Log("Top Portal Collision Bounds: " + bounds);
+        }
+
+        List<Bounds> bottomPortalCollisionBounds = GetCollisionBoundsForBottomPortal();
+        foreach (var bounds in bottomPortalCollisionBounds)
+        {
+            Debug.Log("Bottom Portal Collision Bounds: " + bounds);
+        }
+
+        foreach (Bounds b in topPortalCollisionBounds)
+        {
+            extraBoxes.Add(AddBoxCollider(b.min.x, b.max.x, bottomPortalCollider.bounds.min.y, bottomPortalCollider.bounds.max.y));
+        }
+
+        foreach (Bounds b in bottomPortalCollisionBounds)
+        {
+            extraBoxes.Add(AddBoxCollider(b.min.x, b.max.x, topPortalCollider.bounds.min.y, topPortalCollider.bounds.max.y));
+        }
     }
+
+    void OnDisable()
+    {
+        foreach (var b in extraBoxes)
+        {
+            Destroy(b);
+        }
+    }
+
+    public GameObject AddBoxCollider(float minX, float maxX, float minY, float maxY)
+    {
+        GameObject colliderObject = new GameObject("ExtraBoxCollider");
+        BoxCollider2D boxCollider = colliderObject.AddComponent<BoxCollider2D>();
+
+        float width = maxX - minX;
+        float height = maxY - minY;
+        boxCollider.size = new Vector2(width, height);
+
+        Vector2 center = new Vector2(minX + width / 2, minY + height / 2);
+        colliderObject.transform.position = center;
+
+        colliderObject.transform.parent = transform;
+
+        return colliderObject;
+    }
+
+
+    private List<Bounds> GetCollisionBounds(BoxCollider2D collider)
+    {
+        List<Bounds> collisionBounds = new List<Bounds>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.useTriggers = false;
+
+        List<Collider2D> results = new List<Collider2D>();
+
+        int collisionCount = Physics2D.OverlapCollider(collider, filter, results);
+        for (int i = 0; i < collisionCount; i++)
+        {
+            collisionBounds.Add(results[i].bounds);
+        }
+
+        return collisionBounds;
+    }
+
+    private List<Bounds> GetCollisionBoundsForTopPortal()
+    {
+        return GetCollisionBounds(topPortalCollider);
+    }
+
+    private List<Bounds> GetCollisionBoundsForBottomPortal()
+    {
+        return GetCollisionBounds(bottomPortalCollider);
+    }
+
+
+
+
+    #region portal colliders
 
     void ForceUpdateColliderBounds()
     {
@@ -70,7 +149,6 @@ public class PortalCollidersController : MonoBehaviour
         rightPortalCollider.enabled = true;
     }
 
-    #region portal colliders
     private List<GameObject> PortalIinit()
     {
         topPortal = CreatePortalCollider("PortalTopCollider", PortalSide.Top);
@@ -105,10 +183,6 @@ public class PortalCollidersController : MonoBehaviour
         return colliderObject;
     }
 
-    // void OnEnable()
-    // {
-    //     PositionColliders();
-    // }
 
     void PositionPortalColliders()
     {
@@ -122,6 +196,9 @@ public class PortalCollidersController : MonoBehaviour
 
 
     #endregion
+
+    #region portal areas
+
 
     GameObject PortalAreaInit()
     {
@@ -148,7 +225,9 @@ public class PortalCollidersController : MonoBehaviour
         portalArea.transform.parent = transform;
         return portalArea;
     }
+    #endregion
 
+    #region teleport
     public void TeleportPlayer(PortalSide portalSide)
     {
         Vector3 playerPosition = player.transform.position;
@@ -253,13 +332,13 @@ public class PortalCollidersController : MonoBehaviour
         {
             case PortalSide.Bottom:
                 newPosition.y = topPortalCollider.bounds.min.y;
-                areaStart = new Vector2(playerCollider.bounds.min.x, newPosition.y);
-                areaEnd = new Vector2(playerCollider.bounds.max.x, newPosition.y);
+                areaStart = new Vector2(playerCollider.bounds.min.x + 0.1f, newPosition.y);
+                areaEnd = new Vector2(playerCollider.bounds.max.x - 0.1f, newPosition.y);
                 break;
             case PortalSide.Top:
                 newPosition.y = bottomPortalCollider.bounds.max.y;
-                areaStart = new Vector2(playerCollider.bounds.min.x, newPosition.y);
-                areaEnd = new Vector2(playerCollider.bounds.max.x, newPosition.y);
+                areaStart = new Vector2(playerCollider.bounds.min.x - 0.1f, newPosition.y);
+                areaEnd = new Vector2(playerCollider.bounds.max.x - 0.1f, newPosition.y);
                 break;
             case PortalSide.Left:
                 newPosition.x = rightPortalCollider.bounds.min.x;
@@ -282,11 +361,11 @@ public class PortalCollidersController : MonoBehaviour
         List<Collider2D> realresults = results.Where(r => !portalColliders.Select(p => p.name).Contains(r.name)).ToList();
         bool overlaps = realresults.Any();
 
-        Debug.Log($"New position: {newPosition}");
-        Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
-        Debug.Log($"Number of collisions detected: {results.Count}");
-        Debug.Log($"Number of actual collisions detected: {realresults.Count}");
-        Debug.Log($"names: {portalColliders.First().name}");
+        // Debug.Log($"New position: {newPosition}");
+        // Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
+        // Debug.Log($"Number of collisions detected: {results.Count}");
+        // Debug.Log($"Number of actual collisions detected: {realresults.Count}");
+        // Debug.Log($"names: {portalColliders.First().name}");
 
 
         switch (portalSide)
@@ -309,10 +388,14 @@ public class PortalCollidersController : MonoBehaviour
         return !overlaps;
     }
 
-
-
-
-
+    public void ResetPortalTriggers()
+    {
+        foreach (var p in portalColliders)
+        {
+            p.isTrigger = true;
+        }
+    }
+    #endregion
 
     void OnDrawGizmos()
     {
@@ -365,7 +448,17 @@ public class PortalSideCollider : MonoBehaviour
         {
             if (portalController.CanTeleport(portalSide, other.GetComponent<Collider2D>().transform.position)) HandleTeleport(other);
         }
+        portalController.ResetPortalTriggers();
     }
+
+    // void OnTriggerExit2D(Collider2D other)
+    // {
+    //     Debug.Log("test");
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         portalController.ResetPortalTriggers();
+    //     }
+    // }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -390,6 +483,10 @@ public class PortalSideCollider : MonoBehaviour
             if (portalController.CanTeleport(portalSide, collision.collider.transform.position)) HandleTeleport(collision.collider);
         }
     }
+
+    // public void Update() {
+    //     portalController.ResetPortalTriggers();
+    // }
 
     // void OnCollisionEnter2D(Collision2D collision)
     // {

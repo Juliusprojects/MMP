@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LaunchProjectile : MonoBehaviour
 {
-    public float launchvelocity = 4.5f;
+    public float launchvelocity = 100f;
 
     // Update is called once per frame
     void Update()
