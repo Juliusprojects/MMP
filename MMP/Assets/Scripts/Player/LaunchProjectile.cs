@@ -9,7 +9,7 @@ public class LaunchProjectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += -transform.right * Time.deltaTime * launchvelocity;
+        transform.position += launchvelocity * Time.deltaTime * -transform.right;
         Destroy(gameObject, 5f);        
     }
 

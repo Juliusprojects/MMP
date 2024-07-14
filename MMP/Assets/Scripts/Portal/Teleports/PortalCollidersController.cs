@@ -37,8 +37,7 @@ public class PortalCollidersController : MonoBehaviour
             Debug.LogError("Player GameObject not found! Please ensure the player has the 'Player' tag.");
             return;
         }
-
-
+        //playerSpriteRenderers = player.GetComponentsInChildren<SpriteRenderer>().ToList();
         portalColliders = PortalIinit().Select(p => p.GetComponent<BoxCollider2D>()).ToList();
         PositionPortalColliders();
 
@@ -46,13 +45,35 @@ public class PortalCollidersController : MonoBehaviour
         PortalArea = PortalAreaInit();
         OuterPortalArea = OuterPortalAreaInit();
 
+    }
 
+    void Update()
+    {
+        //UpdateReflection(GameObject.Find("MirrorSource").transform, GameObject.Find("MirrorDestination").transform);
     }
 
     List<GameObject> extraBoxes = new List<GameObject>();
+
     void OnEnable()
     {
         CreateOpposingColliders();
+    }
+
+    void Start()
+    {
+        float sideOffset = 6f;
+        var sMinX = leftPortalCollider.bounds.max.x - sideOffset;
+        var sMaxX = leftPortalCollider.bounds.max.x;
+        var sMaxY = leftPortalCollider.bounds.max.y;
+        var sMinY = leftPortalCollider.bounds.min.y;
+
+        var dMaxX = rightPortalCollider.bounds.min.x - sideOffset;
+        var dMinX = rightPortalCollider.bounds.min.x;
+        var dMaxY = rightPortalCollider.bounds.max.y;
+        var dMinY = rightPortalCollider.bounds.min.y;
+
+        SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY);
+        SetupMirrorDisplay(dMinX, dMaxX, sMinY, sMaxY);
     }
 
     void OnDisable()
@@ -65,12 +86,118 @@ public class PortalCollidersController : MonoBehaviour
 
     #region mirrors
 
-    public void CreateMirror() {
-        
-        SpriteRenderer playerSprite = player.GetComponent<SpriteRenderer>();
-        GameObject leftMirror = new GameObject("leftReflection");
-        
+    public Vector2Int renderTextureSize = new Vector2Int(1024, 1024); // Size of the Render Texture
+    public Camera mirrorCamera;
+    public SpriteRenderer mirrorDisplay;
+    private RenderTexture mirrorRenderTexture;
+
+void SetupMirrorCamera(float minX, float maxX, float minY, float maxY)
+    {
+        Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, -10);
+        float orthographicSize = (maxY - minY) / 2;
+
+        // Ensure the render texture size is greater than 0
+        int textureWidth = Mathf.Max(1, renderTextureSize.x);
+        int textureHeight = Mathf.Max(1, renderTextureSize.y);
+
+        mirrorRenderTexture = new RenderTexture(textureWidth, textureHeight, 16);
+        mirrorRenderTexture.name = "MirrorRenderTexture";
+
+        GameObject mirrorCameraObject = new GameObject("MirrorCamera");
+        mirrorCameraObject.transform.parent = transform;
+        mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
+        mirrorCamera.targetTexture = mirrorRenderTexture;
+        mirrorCamera.orthographic = true;
+        mirrorCamera.orthographicSize = orthographicSize;
+        mirrorCamera.aspect = (maxX - minX) / (maxY - minY);
+
+        mirrorCameraObject.transform.localPosition = transform.InverseTransformPoint(position);
+        mirrorCamera.transform.rotation = Quaternion.identity; // Ensure no rotation to avoid flipping
+
+        // Set the culling mask to only include the player layer
+        mirrorCamera.cullingMask = LayerMask.GetMask("Player");
     }
+
+    void SetupMirrorDisplay(float minX, float maxX, float minY, float maxY)
+    {
+        Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0);
+        Vector2 size = new Vector2(maxX - minX, maxY - minY);
+        GameObject mirrorDisplay = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mirrorDisplay.name = "MirrorDisplay";
+        mirrorDisplay.transform.parent = transform;
+
+        Material mirrorMaterial = new Material(Shader.Find("Unlit/Texture"));
+        mirrorMaterial.mainTexture = mirrorRenderTexture;
+        mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
+
+        mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(position);
+        mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 1f);
+        mirrorDisplay.transform.rotation = Quaternion.identity; // Ensure no rotation to avoid flipping
+
+        // Adjust the mirror display's UVs to flip the image horizontally
+        var meshFilter = mirrorDisplay.GetComponent<MeshFilter>();
+        var mesh = meshFilter.mesh;
+        Vector2[] uvs = new Vector2[4];
+        uvs[0] = new Vector2(1, 0);
+        uvs[1] = new Vector2(0, 0);
+        uvs[2] = new Vector2(1, 1);
+        uvs[3] = new Vector2(0, 1);
+        mesh.uv = uvs;
+    }
+
+
+//     private RenderTexture mirrorRenderTexture;
+
+//   void SetupMirrorCamera(float minX, float maxX, float minY, float maxY)
+//     {
+//         Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, -10);
+//         float orthographicSize = (maxY - minY) / 2;
+
+//         mirrorRenderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, 16);
+//         mirrorRenderTexture.name = "MirrorRenderTexture";
+
+//         GameObject mirrorCameraObject = new GameObject("MirrorCamera");
+//         mirrorCameraObject.transform.parent = transform;
+//         mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
+//         mirrorCamera.targetTexture = mirrorRenderTexture;
+//         mirrorCamera.orthographic = true;
+//         mirrorCamera.orthographicSize = orthographicSize;
+//         mirrorCamera.aspect = (maxX - minX) / (maxY - minY);
+
+//         mirrorCameraObject.transform.localPosition = transform.InverseTransformPoint(position);
+//         mirrorCamera.transform.rotation = Quaternion.identity; // Ensure no rotation to avoid flipping
+//     }
+
+//     void SetupMirrorDisplay(float minX, float maxX, float minY, float maxY)
+//     {
+//         Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0);
+//         Vector2 size = new Vector2(maxX - minX, maxY - minY);
+//         GameObject mirrorDisplay = GameObject.CreatePrimitive(PrimitiveType.Quad);
+//         mirrorDisplay.name = "MirrorDisplay";
+//         mirrorDisplay.transform.parent = transform;
+
+//         Material mirrorMaterial = new Material(Shader.Find("Unlit/Texture"));
+//         mirrorMaterial.mainTexture = mirrorRenderTexture;
+//         mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
+
+//         mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(position);
+//         mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 1f);
+//         mirrorDisplay.transform.rotation = Quaternion.identity; // Ensure no rotation to avoid flipping
+
+//         // Adjust the mirror display's UVs to avoid flipping the image
+//         var meshFilter = mirrorDisplay.GetComponent<MeshFilter>();
+//         var mesh = meshFilter.mesh;
+//         Vector2[] uvs = new Vector2[4];
+//         uvs[0] = new Vector2(0, 0);
+//         uvs[1] = new Vector2(1, 0);
+//         uvs[2] = new Vector2(0, 1);
+//         uvs[3] = new Vector2(1, 1);
+//         mesh.uv = uvs;
+//     }
+
+
+
+
 
     #endregion
 
