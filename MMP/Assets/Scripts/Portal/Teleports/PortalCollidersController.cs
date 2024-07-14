@@ -66,7 +66,7 @@ public class PortalCollidersController : MonoBehaviour
     #region mirrors
 
     public void CreateMirror() {
-
+        
         SpriteRenderer playerSprite = player.GetComponent<SpriteRenderer>();
         GameObject leftMirror = new GameObject("leftReflection");
         

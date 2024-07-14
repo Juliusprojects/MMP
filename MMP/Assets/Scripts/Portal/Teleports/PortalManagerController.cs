@@ -108,6 +108,7 @@ public class PortalManagerController : MonoBehaviour
         foreach (Collider2D c in outerColliders)
         {
             if (portalColliders.Contains(c)) continue;
+            if (c.CompareTag("Enemy")) continue;
             if ( c != playerCollider)
             {
                 c.isTrigger = true;
