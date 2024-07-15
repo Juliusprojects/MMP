@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 6f;
     public float lowJumpMultiplier = 9f;
     public float jumpCooldown = 0.13f;
+    public ParticleSystem deathParticle;
     public ParticleSystem particleSystem;
     public Vector3 respawnPoint;
 

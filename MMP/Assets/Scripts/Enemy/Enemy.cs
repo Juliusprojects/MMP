@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     {
         //rb = GetComponent<Rigidbody2D>();
         //transform.position = points[startPoint].position;
-        gameObject.GetComponent<Animator>().enabled = false;
+        gameObject.GetComponent<Animator>().enabled = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -42,16 +42,21 @@ public class Enemy : MonoBehaviour
 
         transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime);
         */
-
+        
 
         //move towards the player
-        if (Vector3.Distance(transform.position, target.position) < 10f)
+        if (Vector3.Distance(transform.position, target.position) < 20f)
         {//move if distance from target is smaller than 20
          //rotate to look at the player
-            transform.LookAt(target.position);
-            transform.Rotate(new Vector3(0, -90, 0), Space.Self);//correcting the original rotation
-            gameObject.GetComponent<Animator>().enabled = true;
-            transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
+            if (transform.position.x - target.position.x <= 0)
+            {
+                gameObject.GetComponent<Animator>().SetTrigger("right");
+            }
+            else
+            {
+                gameObject.GetComponent<Animator>().SetTrigger("left");
+            }
+            transform.position = Vector2.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime); 
         }
         else
         {
@@ -59,15 +64,17 @@ public class Enemy : MonoBehaviour
             {
                 gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
-            gameObject.GetComponent<Animator>().enabled = false;
+            gameObject.GetComponent<Animator>().SetTrigger("stop");
             ChangeSprite(newSprite);
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if (collision.gameObject.CompareTag("Player"))
         {
+            collision.gameObject.GetComponent<PlayerController>().deathParticle.Play();
             //deactivate Portal if Active
             if (GameObject.FindWithTag("Portal") != null)
             {
