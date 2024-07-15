@@ -10,7 +10,8 @@ public class LaunchProjectile : MonoBehaviour
     void Update()
     {
         transform.position += launchvelocity * Time.deltaTime * -transform.right;
-        Destroy(gameObject, 5f);        
+        Destroy(gameObject, 5f);   
+        gameObject.tag = "Projectile";
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
