@@ -7,11 +7,20 @@ public class LaunchProjectile : MonoBehaviour
     public float launchvelocity = 100f;
 
     // Update is called once per frame
+
+    void Start() {
+        gameObject.tag = "Player";
+        SpriteRenderer sprite = gameObject.GetComponent<SpriteRenderer>();
+        sprite.sortingLayerName = "Player";
+        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        float v = transform.rotation.y >= 0 ? -10f : 10f;
+
+        rb.velocity = new Vector2(v, rb.velocity.y);
+    }
     void Update()
     {
-        transform.position += launchvelocity * Time.deltaTime * -transform.right;
+        //transform.position += launchvelocity * Time.deltaTime * -transform.right;
         Destroy(gameObject, 5f);   
-        gameObject.tag = "Projectile";
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

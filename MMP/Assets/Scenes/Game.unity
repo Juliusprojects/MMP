@@ -10049,7 +10049,7 @@ GameObject:
   - component: {fileID: 1207483417}
   m_Layer: 0
   m_Name: PortalManager
-  m_TagString: Untagged
+  m_TagString: PortalManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21123,6 +21123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6047892e0116764591dfaef19324c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: 0
+  points: []
   target: {fileID: 299032858}
   speed: 5
   health: 5
