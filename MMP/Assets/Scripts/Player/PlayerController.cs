@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
         Move(InputUtil.HorizontalInput());
-        if (Input.GetButtonDown("Fire1"))
+        if (InputUtil.Fire())
         {
             anim.SetTrigger("attack");
             particleSystem.Play();
@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    
 
     private void FixedUpdate()
     {

@@ -145,7 +145,6 @@ public class PortalCollidersController : MonoBehaviour
 
         RenderTexture mirrorRenderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, 16);
         mirrorRenderTexture.name = "MirrorRenderTexture";
-
         GameObject mirrorCameraObject = new GameObject("MirrorCamera_" + suffix);
         mirrorCameraObject.transform.parent = transform;
         Camera mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
@@ -155,6 +154,7 @@ public class PortalCollidersController : MonoBehaviour
         mirrorCamera.orthographicSize = orthographicSize;
         mirrorCamera.aspect = (maxX - minX) / (maxY - minY);
         mirrorCamera.cullingMask = 1 << LayerMask.NameToLayer("Player");
+        mirrorCamera.depth = -1;
         mirrorCameras.Add(mirrorCamera);
 
 

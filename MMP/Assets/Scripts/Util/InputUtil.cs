@@ -41,5 +41,9 @@ namespace Util
         {
             return Down() || (!useSpaceForJump && Input.GetKeyDown(KeyCode.Space));
         }
+
+        public static bool Fire() {
+            return Input.GetButtonDown("Fire1");
+        }
     }
 }
