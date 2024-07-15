@@ -486,10 +486,9 @@ public class PortalCollidersController : MonoBehaviour
     #endregion
 
     #region teleport
-    public void TeleportPlayer(PortalSide portalSide)
+    public void TeleportPlayer(PortalSide portalSide, Collider2D traveler)
     {
-        Vector3 playerPosition = player.transform.position;
-        float playerHeight = player.GetComponent<Collider2D>().bounds.size.y;
+        Vector3 playerPosition = traveler.transform.position;
         switch (portalSide)
         {
             case PortalSide.Bottom:
@@ -508,7 +507,7 @@ public class PortalCollidersController : MonoBehaviour
                 break;
         }
 
-        player.transform.position = playerPosition;
+        traveler.transform.position = playerPosition;
         Debug.Log("Teleported player to: " + playerPosition);
     }
 
@@ -775,7 +774,6 @@ public class PortalSideCollider : MonoBehaviour
 
         Bounds playerBounds = collider.bounds;
         Bounds colliderBounds = GetComponent<Collider2D>().bounds;
-
         float minVelocityThreshold = 0f;
 
         // Debug.Log("v y: " + rb.velocity.y);
@@ -796,7 +794,7 @@ public class PortalSideCollider : MonoBehaviour
                 // }
                 if (rb.velocity.y < 0)
                 {
-                    portalController.TeleportPlayer(portalSide);
+                    portalController.TeleportPlayer(portalSide, collider);
                 }
 
                 break;
@@ -804,19 +802,19 @@ public class PortalSideCollider : MonoBehaviour
                 if (rb.velocity.y > minVelocityThreshold && playerBounds.min.y >= colliderBounds.min.y) //&& playerBounds.max.y - colliderBounds.min.y >= portalController.topTeleportThreshold)
 
                 {
-                    portalController.TeleportPlayer(portalSide);
+                    portalController.TeleportPlayer(portalSide, collider);
                 }
                 break;
             case PortalSide.Left:
                 if (rb.velocity.x < -minVelocityThreshold && colliderBounds.max.x - playerBounds.min.x >= (playerBounds.size.x / 2))
                 {
-                    portalController.TeleportPlayer(portalSide);
+                    portalController.TeleportPlayer(portalSide, collider);
                 }
                 break;
             case PortalSide.Right:
                 if (rb.velocity.x > minVelocityThreshold && playerBounds.max.x - colliderBounds.min.x >= (playerBounds.size.x / 2))
                 {
-                    portalController.TeleportPlayer(portalSide);
+                    portalController.TeleportPlayer(portalSide, collider);
                 }
                 break;
 
