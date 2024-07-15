@@ -46,3 +46,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Mirror
+    uniqueID: 2756425401
+    locked: 0
+  - name: Map
+    uniqueID: 1084698735
+    locked: 0
+  - name: Player
+    uniqueID: 2382392325
+    locked: 0
+  - name: Portal
+    uniqueID: 1927673651
+    locked: 0
