@@ -130,6 +130,7 @@ public class PortalManagerController : MonoBehaviour
         {
             if (portalColliders.Contains(c)) continue;
             if (c.CompareTag("Enemy")) continue;
+            if (c.CompareTag("EnemyGround")) continue;
             if ( c != playerCollider)
             {
                 c.isTrigger = true;

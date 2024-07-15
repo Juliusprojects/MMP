@@ -13,7 +13,8 @@ public class LaunchProjectile : MonoBehaviour
         SpriteRenderer sprite = gameObject.GetComponent<SpriteRenderer>();
         sprite.sortingLayerName = "Player";
         Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-        float v = transform.rotation.y >= 0 ? -10f : 10f;
+        float vel = 13f;
+        float v = transform.rotation.y >= 0 ? -vel : vel;
 
         rb.velocity = new Vector2(v, rb.velocity.y);
     }
