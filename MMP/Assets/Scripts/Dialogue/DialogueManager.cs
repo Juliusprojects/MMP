@@ -8,6 +8,7 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogueText;
     private Queue<string> sentences;
+    public static bool isDialogueActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,8 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue (Dialogue dialogue)
     {
+
+        isDialogueActive = true;
 
         nameText.text = dialogue.name;
 
@@ -50,6 +53,8 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue () 
     {
+
+        FindObjectOfType<DialogueTrigger>().dialogueCanvas.SetActive(false);
         Debug.Log("End Dialogue");
     }
 }

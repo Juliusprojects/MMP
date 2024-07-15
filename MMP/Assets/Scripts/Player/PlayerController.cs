@@ -55,12 +55,16 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
         Move(InputUtil.HorizontalInput());
-        if (InputUtil.Fire())
+        if (!DialogueManager.isDialogueActive)
         {
-            anim.SetTrigger("attack");
-            particleSystem.Play();
-            Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
+            if (InputUtil.Fire())
+            {
+                anim.SetTrigger("attack");
+                particleSystem.Play();
+                Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
+            }
         }
+        
     }
 
     
