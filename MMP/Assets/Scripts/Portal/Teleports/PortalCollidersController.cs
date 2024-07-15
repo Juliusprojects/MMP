@@ -29,6 +29,7 @@ public class PortalCollidersController : MonoBehaviour
 
     public GameObject PortalArea { get; private set; }
     public GameObject OuterPortalArea { get; private set; }
+    private List<GameObject> extraBoxes = new();
 
 
     void Awake()
@@ -53,8 +54,6 @@ public class PortalCollidersController : MonoBehaviour
     {
     }
 
-    List<GameObject> extraBoxes = new List<GameObject>();
-
     void OnEnable()
     {
         CreateOpposingColliders();
@@ -62,22 +61,14 @@ public class PortalCollidersController : MonoBehaviour
 
     void Start()
     {
-        float sideOffset = 6f;
-        var sMinX = leftPortalCollider.bounds.max.x - sideOffset;
-        var sMaxX = leftPortalCollider.bounds.max.x;
-        var sMaxY = leftPortalCollider.bounds.max.y;
-        var sMinY = leftPortalCollider.bounds.min.y;
 
-        var dMaxX = rightPortalCollider.bounds.min.x;
-        var dMinX = rightPortalCollider.bounds.min.x - sideOffset;
-        var dMaxY = rightPortalCollider.bounds.max.y;
-        var dMinY = rightPortalCollider.bounds.min.y;
-
-        SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY);
-        SetupMirrorDisplay(dMinX, dMaxX, sMinY, sMaxY);
+        //SetupMirrorDisplay(dMinX, dMaxX, sMinY, sMaxY, "left");
         //SetupMirrorDisplay(sMinX, sMaxX, sMinY, sMaxY);
+        SetupCamerasAndDisplays();
 
     }
+
+
 
     void OnDisable()
     {
@@ -89,82 +80,132 @@ public class PortalCollidersController : MonoBehaviour
 
     #region mirrors
 
-    // public void SetupMirrorCamera(float minX, float maxX, float minY, float maxY)
-    // {
-    //     Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, -10);
-    //     float orthographicSize = (maxY - minY) / 2;
 
-    //     mirrorRenderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, 16);
-    //     mirrorRenderTexture.name = "MirrorRenderTexture";
 
-    //     GameObject mirrorCameraObject = new GameObject("MirrorCamera");
-    //     mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
-    //     mirrorCamera.targetTexture = mirrorRenderTexture;
-    //     mirrorCameraObject.transform.position = position;
-    //     mirrorCamera.orthographic = true;
-    //     mirrorCamera.orthographicSize = orthographicSize;
-    //     mirrorCamera.aspect = (maxX - minX) / (maxY - minY);
+    public Vector2Int renderTextureSize = new Vector2Int(196, 1024); // Size of the Render Texture
+    private List<Camera> mirrorCameras = new List<Camera>();
+    //private RenderTexture mirrorRenderTexture;
+    private List<GameObject> mirrorDisplays = new List<GameObject>();
 
-    //     // Ensure correct color rendering
-    //     mirrorCamera.clearFlags = CameraClearFlags.SolidColor;
-    //     mirrorCamera.backgroundColor = Color.clear;
-    //     mirrorCamera.cullingMask = 1 << LayerMask.NameToLayer("Player");
+    void SetupCamerasAndDisplays()
+    {
+        SetupLeftCameraAndDIsplay();
+        SetupRightCameraAndDIsplay();
+        SetupTopCameraAndDIsplay();
+    }
 
-    //     mirrorCameraObject.transform.parent = transform;
-    // }
+    private void SetupLeftCameraAndDIsplay()
+    {
+        float sideOffset = 3f;
+        var sMinX = leftPortalCollider.bounds.max.x - sideOffset;
+        var sMaxX = leftPortalCollider.bounds.max.x;
+        var sMaxY = leftPortalCollider.bounds.max.y;
+        var sMinY = leftPortalCollider.bounds.min.y;
 
-    public Vector2Int renderTextureSize = new Vector2Int(1024, 1024); // Size of the Render Texture
-    private Camera mirrorCamera;
-    private RenderTexture mirrorRenderTexture;
-    private GameObject mirrorDisplay;
+        var dMaxX = rightPortalCollider.bounds.min.x;
+        var dMinX = rightPortalCollider.bounds.min.x - sideOffset;
+        var dMaxY = rightPortalCollider.bounds.max.y;
+        var dMinY = rightPortalCollider.bounds.min.y;
 
-    public void SetupMirrorCamera(float minX, float maxX, float minY, float maxY)
+        SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY, dMinX, dMaxX, sMinY, sMaxY, "left");
+    }
+
+    private void SetupRightCameraAndDIsplay()
+    {
+        float sideOffset = 3f;
+        var sMinX = rightPortalCollider.bounds.min.x;
+        var sMaxX = rightPortalCollider.bounds.min.x + sideOffset;
+        var sMaxY = leftPortalCollider.bounds.max.y;
+        var sMinY = leftPortalCollider.bounds.min.y;
+
+        var dMaxX = leftPortalCollider.bounds.max.x + sideOffset;
+        var dMinX = leftPortalCollider.bounds.max.x;
+
+        SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY, dMinX, dMaxX, sMinY, sMaxY, "right");
+    }
+
+    private void SetupTopCameraAndDIsplay()
+    {
+        float sideOffset = 6f;
+        var sMinX = topPortalCollider.bounds.min.x;
+        var sMaxX = topPortalCollider.bounds.max.x;
+        var sMaxY = topPortalCollider.bounds.min.y + sideOffset;
+        var sMinY = topPortalCollider.bounds.min.y;
+
+        var dMaxY = bottomPortalCollider.bounds.max.y + sideOffset;
+        var dMinY = bottomPortalCollider.bounds.max.y;
+
+        SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY, sMinX, sMaxX, dMinY, dMaxY, "top");
+    }
+
+    public void SetupMirrorCamera(float minX, float maxX, float minY, float maxY, float dMinX, float dMaxX, float dMinY, float dMaxY, string suffix)
     {
         Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, -10);
         float orthographicSize = (maxY - minY) / 2;
 
-        mirrorRenderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, 16);
+        RenderTexture mirrorRenderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, 16);
         mirrorRenderTexture.name = "MirrorRenderTexture";
 
-        GameObject mirrorCameraObject = new GameObject("MirrorCamera");
+        GameObject mirrorCameraObject = new GameObject("MirrorCamera_" + suffix);
         mirrorCameraObject.transform.parent = transform;
-        mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
+        Camera mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
         mirrorCamera.targetTexture = mirrorRenderTexture;
         mirrorCameraObject.transform.position = position;
         mirrorCamera.orthographic = true;
         mirrorCamera.orthographicSize = orthographicSize;
         mirrorCamera.aspect = (maxX - minX) / (maxY - minY);
         mirrorCamera.cullingMask = 1 << LayerMask.NameToLayer("Player");
+        mirrorCameras.Add(mirrorCamera);
+
+
+        SpriteMask spriteMask = mirrorCameraObject.AddComponent<SpriteMask>();
+        // Assign a mask sprite (make sure you have a mask sprite in your assets)
+        spriteMask.sprite = Resources.Load<Sprite>("invisible.png");
+
+        // Set all SpriteRenderer components on the player and its children to be invisible inside the mask
+        SpriteRenderer[] playerSpriteRenderers = player.GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer sr in playerSpriteRenderers)
+        {
+            sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+        }
 
         // Debugging: Ensure the camera setup is correct
         Debug.Log($"Camera Position: {mirrorCameraObject.transform.position}, Orthographic Size: {orthographicSize}, Aspect Ratio: {mirrorCamera.aspect}");
-    }
 
-    public void SetupMirrorDisplay(float minX, float maxX, float minY, float maxY)
-    {
-        Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0);
-        Vector2 size = new Vector2(maxX - minX, maxY - minY);
 
-        mirrorDisplay = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        mirrorDisplay.name = "MirrorDisplay";
+        // DISPLAY
 
+        Vector3 dPosition = new Vector3((dMinX + dMaxX) / 2, (dMinY + dMaxY) / 2, 1f);
+        Vector2 size = new Vector2(dMaxX - dMinX, dMaxY - dMinY);
+
+        GameObject mirrorDisplay = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mirrorDisplay.name = "MirrorDisplay_" + suffix;
+        mirrorDisplays.Add(mirrorDisplay);
         // Temporarily unparent to set correct world space position and scale
         mirrorDisplay.transform.parent = null;
-        mirrorDisplay.transform.position = position;
-        mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 1f);
+        mirrorDisplay.transform.position = dPosition;
+        mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 0f);
 
         // Set the material and texture for the quad
         Material mirrorMaterial = new Material(Shader.Find("Unlit/Texture"));
         mirrorMaterial.mainTexture = mirrorRenderTexture;
         mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
 
+        Renderer displayRenderer = mirrorDisplay.GetComponent<MeshRenderer>();
+        displayRenderer.sortingLayerName = "Mirror";
+        displayRenderer.sortingOrder = 0;
+
         // Parent the display back to the current transform and adjust local position
         mirrorDisplay.transform.parent = transform;
-        mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(position);
-
+        mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(dPosition);
         // Debugging: Ensure the display setup is correct
-        Debug.Log($"Display Position: {mirrorDisplay.transform.position}, Local Scale: {mirrorDisplay.transform.localScale}");
+        Debug.Log($"sortingLayerName: {displayRenderer.sortingLayerName}, sortingOrder: {displayRenderer.sortingOrder}");
     }
+
+
+
+
+
 
     // WORKING BLACK CHARACTER
     //  public void SetupMirrorDisplay(float minX, float maxX, float minY, float maxY)
@@ -262,8 +303,6 @@ public class PortalCollidersController : MonoBehaviour
 
 
 
-
-
     #endregion
 
     #region opposingColliders
@@ -296,7 +335,7 @@ public class PortalCollidersController : MonoBehaviour
     {
         GameObject colliderObject = new GameObject("ExtraBoxCollider");
         BoxCollider2D boxCollider = colliderObject.AddComponent<BoxCollider2D>();
-
+        boxCollider.name = "extraBox";
         float width = maxX - minX;
         float height = maxY - minY;
         boxCollider.size = new Vector2(width, height);
@@ -310,7 +349,7 @@ public class PortalCollidersController : MonoBehaviour
     }
 
 
-    private List<Bounds> GetCollisionBounds(BoxCollider2D collider)
+    private List<Bounds> GetCollisionBoundsForTopPortal()
     {
         List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
@@ -319,23 +358,33 @@ public class PortalCollidersController : MonoBehaviour
 
         List<Collider2D> results = new List<Collider2D>();
 
-        int collisionCount = Physics2D.OverlapCollider(collider, filter, results);
+        int collisionCount = Physics2D.OverlapCollider(topPortalCollider, filter, results);
         for (int i = 0; i < collisionCount; i++)
         {
+            if (results[i].bounds.min.y > topPortalCollider.bounds.min.y) continue;
             collisionBounds.Add(results[i].bounds);
         }
 
         return collisionBounds;
     }
 
-    private List<Bounds> GetCollisionBoundsForTopPortal()
-    {
-        return GetCollisionBounds(topPortalCollider);
-    }
-
     private List<Bounds> GetCollisionBoundsForBottomPortal()
     {
-        return GetCollisionBounds(bottomPortalCollider);
+                List<Bounds> collisionBounds = new List<Bounds>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.useTriggers = false;
+
+        List<Collider2D> results = new List<Collider2D>();
+
+        int collisionCount = Physics2D.OverlapCollider(bottomPortalCollider, filter, results);
+        for (int i = 0; i < collisionCount; i++)
+        {
+            if (results[i].bounds.max.y < bottomPortalCollider.bounds.max.y) continue;
+            collisionBounds.Add(results[i].bounds);
+        }
+
+        return collisionBounds;
     }
 
 
@@ -449,8 +498,7 @@ public class PortalCollidersController : MonoBehaviour
                 playerPosition.y = topPortalCollider.bounds.min.y;//+ (playerHeight / 2);
                 break;
             case PortalSide.Top:
-                // Set the players new position so their lower bounds match the bottom portals upper bounds
-                playerPosition.y = bottomPortalCollider.bounds.max.y + (playerHeight / 2);
+                playerPosition.y = bottomPortalCollider.bounds.max.y;
                 break;
             case PortalSide.Left:
                 playerPosition.x = rightPortalCollider.bounds.min.x;
@@ -537,12 +585,13 @@ public class PortalCollidersController : MonoBehaviour
         Vector2 areaStart = Vector2.zero;
         Vector2 areaEnd = Vector2.zero;
 
+        float slack = 0.2f;
         switch (portalSide)
         {
             case PortalSide.Bottom:
                 newPosition.y = topPortalCollider.bounds.min.y;
-                areaStart = new Vector2(playerCollider.bounds.min.x + 0.1f, newPosition.y);
-                areaEnd = new Vector2(playerCollider.bounds.max.x - 0.1f, newPosition.y);
+                areaStart = new Vector2(playerCollider.bounds.min.x + 0.1f, newPosition.y + slack);
+                areaEnd = new Vector2(playerCollider.bounds.max.x - 0.1f, newPosition.y - slack);
                 break;
             case PortalSide.Top:
                 newPosition.y = bottomPortalCollider.bounds.max.y;
@@ -567,9 +616,20 @@ public class PortalCollidersController : MonoBehaviour
         List<Collider2D> results = new List<Collider2D>();
         Physics2D.OverlapArea(areaStart, areaEnd, filter, results);
 
-        List<Collider2D> realresults = results.Where(r => !portalColliders.Select(p => p.name).Contains(r.name)).ToList();
+
+
+        List<Collider2D> realresults = results
+            .Where(r => !portalColliders
+                .Select(p => p.name)
+                .Contains(r.name))
+            .Where(r => r.name != "extraBox")
+            .ToList();
         bool overlaps = realresults.Any();
 
+        if (portalSide == PortalSide.Bottom)
+        {
+            Debug.Log("Collisions: " + realresults.Count);
+        }
         // Debug.Log($"New position: {newPosition}");
         // Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
         // Debug.Log($"Number of collisions detected: {results.Count}");

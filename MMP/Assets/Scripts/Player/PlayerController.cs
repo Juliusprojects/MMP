@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
         } else if (horizontalInput < 0) {
             targetRotation = Quaternion.Euler(0, 0, 0);
         }
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 100f);
         // move or set velocity to 0 when horizontalInput is 0)
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 

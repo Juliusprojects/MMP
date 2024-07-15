@@ -17,7 +17,7 @@ TagManager:
   - UI
   - Player
   - Enemy
-  - 
+  - PlayerMirror
   - 
   - 
   - 
@@ -44,4 +44,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Mirror
+    uniqueID: 3188753999
+    locked: 0
+  - name: Map
+    uniqueID: 1154288899
+    locked: 0
+  - name: Player
+    uniqueID: 1286483755
+    locked: 0
+  - name: Portal
+    uniqueID: 3607165385
     locked: 0
