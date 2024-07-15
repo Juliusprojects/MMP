@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     public float lowJumpMultiplier = 9f;
     public float jumpCooldown = 0.13f;
     public ParticleSystem particleSystem;
-    public Vector3 respawnPoint;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -33,7 +32,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        respawnPoint = transform.position;
         rb = GetComponent<Rigidbody2D>();
         anim = transform.Find("CharacterCrtl").GetComponent<Animator>();
         groundLayer = LayerMask.GetMask("Ground");
@@ -95,7 +93,7 @@ public class PlayerController : MonoBehaviour
         } else if (horizontalInput < 0) {
             targetRotation = Quaternion.Euler(0, 0, 0);
         }
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 100f);
         // move or set velocity to 0 when horizontalInput is 0)
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 

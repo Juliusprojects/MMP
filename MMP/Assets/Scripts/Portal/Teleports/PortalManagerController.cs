@@ -74,12 +74,6 @@ public class PortalManagerController : MonoBehaviour
         }
     }
 
-    public void DeactivatePortal()
-    {
-        portal.SetActive(false);
-        RestoreOriginalCollisions();
-    }
-
     private void SetPortalActive(bool isActive)
     {
         portal.SetActive(isActive);

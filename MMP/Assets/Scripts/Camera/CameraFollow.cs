@@ -13,13 +13,9 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         GameObject playerObject = GameObject.FindWithTag("Player");
-        if (playerObject != null)
-        {
-            player = playerObject.transform;
-            Vector3 initialPosition = player.position + playerOffset;
-            transform.position = initialPosition;
-        }
-
+        player = playerObject.transform;
+        Vector3 initialPosition = player.position + playerOffset;
+        transform.position = initialPosition;
         portal = GameObject.FindWithTag("Portal");
     }
 
@@ -39,6 +35,7 @@ public class CameraFollow : MonoBehaviour
 
             Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothSpeed);
             transform.position = smoothedPosition;
+            transform.GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
         }
     }
 }

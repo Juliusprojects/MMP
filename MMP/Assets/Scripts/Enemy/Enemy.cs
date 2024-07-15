@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -68,14 +67,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //deactivate Portal if Active
-            if (GameObject.FindWithTag("Portal") != null)
-            {
-                GameObject.FindWithTag("Portal").SetActive(false);
-                GameObject.FindWithTag("PortalManager").GetComponent<PortalManagerController>().DeactivatePortal();
-            }
-            //respawnPlayer
-            collision.gameObject.transform.position = collision.gameObject.GetComponent<PlayerController>().respawnPoint;
+            //player dies and respawns
         }
         else if (collision.gameObject.CompareTag("Ground"))
         {
