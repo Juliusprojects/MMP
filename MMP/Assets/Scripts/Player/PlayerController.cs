@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public float lowJumpMultiplier = 9f;
     public float jumpCooldown = 0.13f;
     public ParticleSystem particleSystem;
+    public Vector3 respawnPoint;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        respawnPoint = transform.position;
         rb = GetComponent<Rigidbody2D>();
         anim = transform.Find("CharacterCrtl").GetComponent<Animator>();
         groundLayer = LayerMask.GetMask("Ground");
