@@ -126,10 +126,9 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         if (Time.time - groundedTime < jumpCooldown) return; // Check for jump cooldown
-
+        if (rb.velocity.y < 0) return; 
         if (!anim.GetBool("isJump2") && grounded)
         {
-            //Debug.Log("Min height: " + minYPosition);
             isJumping = true;
             anim.SetTrigger("takeoff");
             anim.SetBool("isJump2", true);
