@@ -452,7 +452,7 @@ public class PortalCollidersController : MonoBehaviour
         int collisionCount = Physics2D.OverlapCollider(bottomPortalCollider, filter, results);
         for (int i = 0; i < collisionCount; i++)
         {
-            if (results[i].bounds.min.y < bottomPortalCollider.bounds.min.y) continue;
+            if (results[i].bounds.min.y < bottomPortalCollider.bounds.max.y) continue;
             collisionBounds.Add(results[i].bounds);
         }
 
