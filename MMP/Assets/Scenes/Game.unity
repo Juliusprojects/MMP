@@ -2327,7 +2327,7 @@ MonoBehaviour:
   fallMultiplier: 6
   lowJumpMultiplier: 9
   jumpCooldown: 0.13
-  deathParticle: {fileID: 1640867491}
+  deathParticle: {fileID: 1397232433}
   particleSystem: {fileID: 1640867491}
   respawnPoint: {x: 0, y: 0, z: 0}
   ProjectilePrefab: {fileID: -6323088588190302938, guid: b3749ea4f66833d499c8ff5d24801ea4, type: 3}
@@ -38563,7 +38563,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 0.2
   simulationSpeed: 1
-  stopAction: 2
+  stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -43343,7 +43343,7 @@ Transform:
   m_GameObject: {fileID: 1397232431}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 75.10843, y: 79.59718, z: 0}
+  m_LocalPosition: {x: -0.01, y: 2.91, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

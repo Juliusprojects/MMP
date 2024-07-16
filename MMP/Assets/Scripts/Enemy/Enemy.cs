@@ -96,7 +96,7 @@ public class Enemy : MonoBehaviour
                 portal.SetActive(false);
             }
             //respawnPlayer
-            collision.gameObject.transform.position = collision.gameObject.GetComponent<PlayerController>().respawnPoint;
+            StartCoroutine(WaitAndRespawn(collision.gameObject));
         }
         else if ((combinedGroundLayersMask & (1 << collision.gameObject.layer)) != 0)
         {
@@ -121,5 +121,11 @@ public class Enemy : MonoBehaviour
     void ChangeSprite(Sprite newSprite)
     {
         spriteRenderer.sprite = newSprite;
+    }
+
+    IEnumerator WaitAndRespawn(GameObject player)
+    {
+        yield return new WaitForSeconds(0.3f);
+        player.transform.position = player.GetComponent<PlayerController>().respawnPoint;
     }
 }
