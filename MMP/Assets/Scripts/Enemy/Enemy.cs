@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     private bool grounded = false;
     private int combinedGroundLayersMask;
 
+    public ParticleSystem particle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -112,6 +114,7 @@ public class Enemy : MonoBehaviour
 
     public void DamageEnemy(int damageAmount, GameObject enemy)
     {
+        particle.Play();
         health -= damageAmount;
         if (health <= 0)
         {
