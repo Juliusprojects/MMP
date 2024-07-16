@@ -10,13 +10,13 @@ public class DialogueManager : MonoBehaviour
     private Queue<string> sentences;
     public static bool isDialogueActive = false;
     public static bool isDone = false;
-    
-    public GameObject thankYouDialogueCanvas;
-    private bool isThankYouDialogueTriggered = false;
+    private GameObject canvas;
 
+    public static bool GameOver = false;
     void Start()
     {
         sentences = new Queue<string>();
+        canvas = FindObjectOfType<DialogueTrigger>().dialogueCanvas;
     }
 
     void Update()
@@ -26,7 +26,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(Dialogue dialogue)
     {
-        if (isDone && !isThankYouDialogueTriggered) return;
+        if (isDone || GameOver) return;
         isDialogueActive = true;
 
         nameText.text = dialogue.name;
@@ -53,38 +53,73 @@ public class DialogueManager : MonoBehaviour
         dialogueText.text = sentence;
     }
 
+
     void EndDialogue()
+{
+    if (isDone)
     {
-        isDone = true;
-        FindObjectOfType<DialogueTrigger>().dialogueCanvas.SetActive(false);
-        Debug.Log("End Dialogue");
+        StartEndDialog();
+        return;
+    }
+    isDone = true;
+    FindObjectOfType<DialogueTrigger>().dialogueCanvas.SetActive(false);
+    Debug.Log("End Dialogue");
+}
+
+public void StartEndDialog()
+{
+    canvas.SetActive(true);
+    StartCoroutine(ShowThankYouAndFade());
+}
+
+private IEnumerator ShowThankYouAndFade()
+{
+    isDialogueActive = true;
+    dialogueText.text = "Thank you.. finally im freeEeeEEEe..:)";
+    yield return new WaitForSeconds(2f);
+
+    CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+    if (canvasGroup == null)
+    {
+        canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
-    public void StartThankYouDialogue()
+    SpriteRenderer[] spriteRenderers = transform.parent.GetComponentsInChildren<SpriteRenderer>();
+    if (spriteRenderers.Length == 0)
     {
-        if (isThankYouDialogueTriggered) return;
-        isThankYouDialogueTriggered = true;
-        thankYouDialogueCanvas.SetActive(true);
-        dialogueText.text = "Thank you";
-        StartCoroutine(FadeOutDialogueText());
+        Debug.LogWarning("No SpriteRenderers found in the sibling GameObject and its children.");
     }
 
-    private IEnumerator FadeOutDialogueText()
+    float fadeDuration = 2f; 
+    float fadeSpeed = 1f / fadeDuration;
+    while (canvasGroup.alpha > 0)
     {
-        float fadeDuration = 1.0f;
-        float startAlpha = dialogueText.color.a;
-        float rate = 1.0f / fadeDuration;
-        float progress = 0.0f;
+        float fadeAmount = Time.deltaTime * fadeSpeed;
+        canvasGroup.alpha -= fadeAmount;
 
-        while (progress < 1.0f)
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
         {
-            Color tmpColor = dialogueText.color;
-            dialogueText.color = new Color(tmpColor.r, tmpColor.g, tmpColor.b, Mathf.Lerp(startAlpha, 0, progress));
-            progress += rate * Time.deltaTime;
-            yield return null;
+            Color spriteColor = spriteRenderer.color;
+            spriteColor.a -= fadeAmount;
+            spriteRenderer.color = spriteColor;
         }
 
-        dialogueText.color = new Color(dialogueText.color.r, dialogueText.color.g, dialogueText.color.b, 0);
-        thankYouDialogueCanvas.SetActive(false);
+        yield return null;
     }
+
+    canvasGroup.alpha = 0;
+    foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+    {
+        Color spriteColor = spriteRenderer.color;
+        spriteColor.a = 0;
+        spriteRenderer.color = spriteColor;
+    }
+    canvas.SetActive(false);
+    GameOver = true;
+    //isDialogueActive = false;
+    //gameObject.SetActive(false);
+}
+
+
+
 }

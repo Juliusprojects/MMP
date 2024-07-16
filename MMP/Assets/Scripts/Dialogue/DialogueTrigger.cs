@@ -18,13 +18,16 @@ public class DialogueTrigger : MonoBehaviour
         FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
     }
 
+
     void OnTriggerEnter2D(Collider2D other)
     {   
-        if (DialogueManager.isDone) return;
-        Debug.Log("Trigger Enter");
+        if (DialogueManager.GameOver) return;
+        if (DialogueManager.isDone && !GhostWand.isCollected) { return; }
+        if (GhostWand.isCollected) {
+            FindObjectOfType<DialogueManager>().StartEndDialog();
+        } 
         if (other.CompareTag("Player"))
         {
-
             dialogueCanvas.SetActive(true);
             TriggerDialogue();
             DialogueManager.isDialogueActive = true;
@@ -33,6 +36,7 @@ public class DialogueTrigger : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
+        if (DialogueManager.GameOver) return;
         Debug.Log("Trigger Exit");
         if (other.CompareTag("Player"))
         {
@@ -43,6 +47,9 @@ public class DialogueTrigger : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
+        if (DialogueManager.isDone && GhostWand.isCollected) {
+            return;
+        } 
         //Debug.Log("Trigger Stay");
         if (other.CompareTag("Player"))
         {
