@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public Transform target;//set target from inspector instead of looking in Update
     public float speed = 3f;
     //public float speed;
-    public int health = 5;
+    public int health = 1;
     private int i = 0;
     public SpriteRenderer spriteRenderer;
     public Sprite newSprite;
@@ -90,9 +90,10 @@ public class Enemy : MonoBehaviour
         {
             collision.gameObject.GetComponent<PlayerController>().deathParticle.Play();
             //deactivate Portal if Active
-            if (GameObject.FindWithTag("Portal") != null)
+            var portal = GameObject.FindWithTag("Portal");
+            if (portal != null)
             {
-                GameObject.FindWithTag("PortalManager").GetComponent<PortalManagerController>().DeactivatePortal();
+                portal.SetActive(false);
             }
             //respawnPlayer
             collision.gameObject.transform.position = collision.gameObject.GetComponent<PlayerController>().respawnPoint;
