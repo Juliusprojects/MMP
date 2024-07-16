@@ -10,4 +10,4 @@
  
 - **Actions:**
   - **Space**: Open/Close Portal
-  - **Mouse1**: Open/Close Portal
+  - **Mouse1**: Shoot magic
