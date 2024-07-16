@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 5342271}
   m_Layer: 8
   m_Name: Square (Platform) (59)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 5469560}
   m_Layer: 8
   m_Name: Square (Platform) (31)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 38363881}
   m_Layer: 8
   m_Name: Square (Platform mittel) (16)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4840,7 +4840,7 @@ GameObject:
   - component: {fileID: 145146790}
   m_Layer: 8
   m_Name: Square (Boden2) (29)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8388,7 +8388,7 @@ GameObject:
   - component: {fileID: 283211351}
   m_Layer: 8
   m_Name: Square (Platform) (34)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9461,7 +9461,7 @@ GameObject:
   - component: {fileID: 325492496}
   m_Layer: 8
   m_Name: Square (Platform mittel) (13)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11231,7 +11231,7 @@ GameObject:
   - component: {fileID: 382368477}
   m_Layer: 8
   m_Name: Square (Platform mittel) (15)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13830,7 +13830,7 @@ GameObject:
   - component: {fileID: 463206649}
   m_Layer: 8
   m_Name: Square (Platform) (2)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15995,7 +15995,7 @@ GameObject:
   - component: {fileID: 531119354}
   m_Layer: 8
   m_Name: Square (Platform mittel) (11)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16759,7 +16759,7 @@ GameObject:
   - component: {fileID: 564143460}
   m_Layer: 8
   m_Name: Square (Boden2) (40)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17936,7 +17936,7 @@ GameObject:
   - component: {fileID: 602704644}
   m_Layer: 8
   m_Name: Square (Platform) (48)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19572,7 +19572,7 @@ GameObject:
   - component: {fileID: 647523010}
   m_Layer: 8
   m_Name: Square (Platform mittel) (18)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20588,7 +20588,7 @@ GameObject:
   - component: {fileID: 661190104}
   m_Layer: 8
   m_Name: Square (Platform) (58)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21100,9 +21100,9 @@ GameObject:
   - component: {fileID: 679476861}
   - component: {fileID: 679476860}
   - component: {fileID: 679476859}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SpikeSquare (7)
-  m_TagString: Untagged
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21289,7 +21289,7 @@ GameObject:
   - component: {fileID: 680361193}
   m_Layer: 8
   m_Name: Square (Boden2) (28)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23614,7 +23614,7 @@ GameObject:
   - component: {fileID: 765912120}
   m_Layer: 8
   m_Name: Square (Boden2) (21)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24042,7 +24042,7 @@ GameObject:
   - component: {fileID: 787221039}
   m_Layer: 8
   m_Name: Square (Boden2) (24)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24172,7 +24172,7 @@ GameObject:
   - component: {fileID: 789615283}
   m_Layer: 8
   m_Name: Square (Platform) (50)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26874,9 +26874,9 @@ GameObject:
   - component: {fileID: 898475591}
   - component: {fileID: 898475593}
   - component: {fileID: 898475592}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Square (Platform lang) (4)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28442,7 +28442,7 @@ GameObject:
   - component: {fileID: 958845100}
   m_Layer: 8
   m_Name: Square (Boden2) (23)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29861,7 +29861,7 @@ GameObject:
   - component: {fileID: 1003482761}
   m_Layer: 8
   m_Name: Square (Platform) (46)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32274,7 +32274,7 @@ ParticleSystem:
   prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
-  autoRandomSeed: 1
+  autoRandomSeed: 0
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -32826,7 +32826,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 250
+    maxNumParticles: 750
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -43246,7 +43246,7 @@ GameObject:
   - component: {fileID: 1137319150}
   m_Layer: 8
   m_Name: Square (Platform) (47)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43818,7 +43818,7 @@ GameObject:
   - component: {fileID: 1152127156}
   m_Layer: 8
   m_Name: Square (Platform) (32)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112485,7 +112485,7 @@ GameObject:
   - component: {fileID: 1291766139}
   m_Layer: 8
   m_Name: Square (Boden2) (38)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121124,7 +121124,7 @@ GameObject:
   - component: {fileID: 1405123355}
   m_Layer: 8
   m_Name: Square (Boden2) (26)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122148,7 +122148,7 @@ GameObject:
   - component: {fileID: 1448897047}
   m_Layer: 8
   m_Name: Square (Pillar) (3)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122614,9 +122614,9 @@ GameObject:
   - component: {fileID: 1459005598}
   - component: {fileID: 1459005597}
   - component: {fileID: 1459005596}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SpikeSquare (6)
-  m_TagString: Untagged
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123177,7 +123177,7 @@ GameObject:
   - component: {fileID: 1469205458}
   m_Layer: 8
   m_Name: Square (Platform) (33)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125131,7 +125131,7 @@ GameObject:
   - component: {fileID: 1525778913}
   m_Layer: 8
   m_Name: Square (Platform mittel) (12)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133977,9 +133977,9 @@ GameObject:
   - component: {fileID: 1649807431}
   - component: {fileID: 1649807430}
   - component: {fileID: 1649807429}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SpikeSquare (4)
-  m_TagString: Untagged
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134334,7 +134334,7 @@ GameObject:
   - component: {fileID: 1666531023}
   m_Layer: 8
   m_Name: Square (Boden) (1)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134798,9 +134798,9 @@ GameObject:
   - component: {fileID: 1693281727}
   - component: {fileID: 1693281729}
   - component: {fileID: 1693281728}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Square (Pillar) (3)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137004,7 +137004,7 @@ GameObject:
   - component: {fileID: 1775223386}
   m_Layer: 8
   m_Name: Square (Boden2) (27)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137134,7 +137134,7 @@ GameObject:
   - component: {fileID: 1777237030}
   m_Layer: 8
   m_Name: Square (Boden2) (22)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138075,7 +138075,7 @@ GameObject:
   - component: {fileID: 1827766983}
   m_Layer: 8
   m_Name: Square (Platform mittel) (19)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138205,7 +138205,7 @@ GameObject:
   - component: {fileID: 1828262287}
   m_Layer: 8
   m_Name: Square (Platform lang) (7)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138335,7 +138335,7 @@ GameObject:
   - component: {fileID: 1833253160}
   m_Layer: 8
   m_Name: Square (Boden2) (25)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138465,9 +138465,9 @@ GameObject:
   - component: {fileID: 1834553551}
   - component: {fileID: 1834553550}
   - component: {fileID: 1834553549}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SpikeSquare (5)
-  m_TagString: Untagged
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140585,7 +140585,7 @@ GameObject:
   - component: {fileID: 1895903127}
   m_Layer: 8
   m_Name: Square (Platform) (57)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142441,7 +142441,7 @@ GameObject:
   - component: {fileID: 1940322143}
   m_Layer: 8
   m_Name: Square (Boden2) (41)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144245,7 +144245,7 @@ GameObject:
   - component: {fileID: 1984771439}
   m_Layer: 8
   m_Name: Square (Platform mittel) (14)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144375,7 +144375,7 @@ GameObject:
   - component: {fileID: 1986809708}
   m_Layer: 8
   m_Name: Square (Platform lang) (4)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146599,7 +146599,7 @@ GameObject:
   - component: {fileID: 2034702472}
   m_Layer: 8
   m_Name: Square (Boden2) (39)
-  m_TagString: Ground
+  m_TagString: EnemyGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
