@@ -89,12 +89,12 @@ public class PortalCollidersController : MonoBehaviour
 
     void SetupCamerasAndDisplays()
     {
-        SetupLeftCameraAndDIsplay();
-        SetupRightCameraAndDIsplay();
-        SetupTopCameraAndDIsplay();
+        SetupLeftCameraAndDisplay();
+        SetupRightCameraAndDisplay();
+        SetupTopCameraAndDisplay();
     }
 
-    private void SetupLeftCameraAndDIsplay()
+    private void SetupLeftCameraAndDisplay()
     {
         float sideOffset = 3f;
         var sMinX = leftPortalCollider.bounds.max.x - sideOffset;
@@ -109,7 +109,7 @@ public class PortalCollidersController : MonoBehaviour
         //SetupHidingCamera(sMinX, sMaxX, sMinY, sMaxY, "left");
     }
 
-    private void SetupRightCameraAndDIsplay()
+    private void SetupRightCameraAndDisplay()
     {
         float sideOffset = 3f;
         var sMinX = rightPortalCollider.bounds.min.x;
@@ -123,7 +123,7 @@ public class PortalCollidersController : MonoBehaviour
         SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY, dMinX, dMaxX, sMinY, sMaxY, "right");
     }
 
-    private void SetupTopCameraAndDIsplay()
+    private void SetupTopCameraAndDisplay()
     {
         float sideOffset = 6f;
         var sMinX = topPortalCollider.bounds.min.x;
@@ -370,17 +370,13 @@ public class PortalCollidersController : MonoBehaviour
     #region opposingColliders
     public void CreateOpposingColliders()
     {
-        List<Bounds> topPortalCollisionBounds = GetCollisionBoundsForTopPortal();
-        foreach (var bounds in topPortalCollisionBounds)
-        {
-            Debug.Log("Top Portal Collision Bounds: " + bounds);
-        }
+        List<Bounds> topPortalCollisionBounds = GetCollisionBoundsTopCollider();
 
-        List<Bounds> bottomPortalCollisionBounds = GetCollisionBoundsForBottomPortal();
-        foreach (var bounds in bottomPortalCollisionBounds)
-        {
-            Debug.Log("Bottom Portal Collision Bounds: " + bounds);
-        }
+        List<Bounds> bottomPortalCollisionBounds = GetCollisionBoundsBottomCollider();
+
+        List<Bounds> leftPortalCollisionBounds = GetCollisionBoundsLeftCollider();
+
+        List<Bounds> rightPortalCollisionBounds = GetCollisionBoundsRightCollider();
 
         foreach (Bounds b in topPortalCollisionBounds)
         {
@@ -390,6 +386,16 @@ public class PortalCollidersController : MonoBehaviour
         foreach (Bounds b in bottomPortalCollisionBounds)
         {
             extraBoxes.Add(AddBoxCollider(b.min.x, b.max.x, topPortalCollider.bounds.min.y, topPortalCollider.bounds.max.y));
+        }
+
+        foreach (Bounds b in leftPortalCollisionBounds)
+        {
+            extraBoxes.Add(AddBoxCollider(rightPortalCollider.bounds.min.x, rightPortalCollider.bounds.max.x, b.min.y, b.max.y));
+        }
+
+        foreach (Bounds b in rightPortalCollisionBounds)
+        {
+            extraBoxes.Add(AddBoxCollider(leftPortalCollider.bounds.min.x, leftPortalCollider.bounds.max.x, b.min.y, b.max.y));
         }
     }
 
@@ -411,7 +417,7 @@ public class PortalCollidersController : MonoBehaviour
     }
 
 
-    private List<Bounds> GetCollisionBoundsForTopPortal()
+    private List<Bounds> GetCollisionBoundsTopCollider()
     {
         List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
@@ -421,16 +427,18 @@ public class PortalCollidersController : MonoBehaviour
         List<Collider2D> results = new List<Collider2D>();
 
         int collisionCount = Physics2D.OverlapCollider(topPortalCollider, filter, results);
+        Debug.Log("TEST: " +  collisionCount);
         for (int i = 0; i < collisionCount; i++)
         {
             if (results[i].bounds.min.y > topPortalCollider.bounds.min.y) continue;
+            Debug.Log("ADDED");
             collisionBounds.Add(results[i].bounds);
         }
 
         return collisionBounds;
     }
 
-    private List<Bounds> GetCollisionBoundsForBottomPortal()
+    private List<Bounds> GetCollisionBoundsBottomCollider()
     {
         List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
@@ -442,7 +450,45 @@ public class PortalCollidersController : MonoBehaviour
         int collisionCount = Physics2D.OverlapCollider(bottomPortalCollider, filter, results);
         for (int i = 0; i < collisionCount; i++)
         {
-            if (results[i].bounds.max.y < bottomPortalCollider.bounds.max.y) continue;
+            if (results[i].bounds.min.y < bottomPortalCollider.bounds.min.y) continue;
+            collisionBounds.Add(results[i].bounds);
+        }
+
+        return collisionBounds;
+    }
+
+    private List<Bounds> GetCollisionBoundsLeftCollider()
+    {
+        List<Bounds> collisionBounds = new List<Bounds>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.useTriggers = false;
+
+        List<Collider2D> results = new List<Collider2D>();
+
+        int collisionCount = Physics2D.OverlapCollider(leftPortalCollider, filter, results);
+        for (int i = 0; i < collisionCount; i++)
+        {
+            if (results[i].bounds.max.x > topPortalCollider.bounds.max.x) continue;
+            collisionBounds.Add(results[i].bounds);
+        }
+
+        return collisionBounds;
+    }
+
+    private List<Bounds> GetCollisionBoundsRightCollider()
+    {
+        List<Bounds> collisionBounds = new List<Bounds>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.useTriggers = false;
+
+        List<Collider2D> results = new List<Collider2D>();
+
+        int collisionCount = Physics2D.OverlapCollider(rightPortalCollider, filter, results);
+        for (int i = 0; i < collisionCount; i++)
+        {
+            if (results[i].bounds.max.x < rightPortalCollider.bounds.max.x) continue;
             collisionBounds.Add(results[i].bounds);
         }
 
