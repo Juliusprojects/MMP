@@ -6,4 +6,4 @@
   - **W** or **↑**: Jump
   - **A** or **←**: Move Left
   - **D** or **→**: Move Right
-  - **S** or **↓**: Open Portal
+  - **Space**: Open Portal
