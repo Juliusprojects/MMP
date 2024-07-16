@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Collection : MonoBehaviour
+public class Firefly : MonoBehaviour
 {
     [SerializeField] GameObject player;
     private bool isPickedUp;
