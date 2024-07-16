@@ -108,6 +108,7 @@ public class PortalCollidersController : MonoBehaviour
         var dMinY = rightPortalCollider.bounds.min.y;
 
         SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY, dMinX, dMaxX, sMinY, sMaxY, "left");
+        //SetupHidingCamera(sMinX, sMaxX, sMinY, sMaxY, "left");
     }
 
     private void SetupRightCameraAndDIsplay()
@@ -184,9 +185,9 @@ public class PortalCollidersController : MonoBehaviour
         mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 0f);
 
         // Set the material and texture for the quad
-        Material mirrorMaterial = new Material(Shader.Find("Unlit/Transparent")); 
+        Material mirrorMaterial = new Material(Shader.Find("Unlit/Transparent"));
         mirrorMaterial.mainTexture = mirrorRenderTexture;
-        mirrorMaterial.color = new Color(1, 1, 1, 0.5f); 
+        mirrorMaterial.color = new Color(1, 1, 1, 0.5f);
         mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
 
         Renderer displayRenderer = mirrorDisplay.GetComponent<MeshRenderer>();
@@ -195,8 +196,74 @@ public class PortalCollidersController : MonoBehaviour
 
         mirrorDisplay.transform.parent = transform;
         mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(dPosition);
-        
-       // Debug.Log($"sortingLayerName: {displayRenderer.sortingLayerName}, sortingOrder: {displayRenderer.sortingOrder}");
+
+        // Debug.Log($"sortingLayerName: {displayRenderer.sortingLayerName}, sortingOrder: {displayRenderer.sortingOrder}");
+    }
+
+    public void SetupHidingCamera(float minX, float maxX, float minY, float maxY, string suffix)
+    {
+        Vector3 position = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0);
+        float orthographicSize = (maxY - minY) / 2;
+
+        RenderTexture mirrorRenderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, 16);
+        mirrorRenderTexture.name = "MirrorRenderTexture";
+        GameObject mirrorCameraObject = new GameObject("HidingCamera_" + suffix);
+        mirrorCameraObject.transform.parent = transform;
+        Camera mirrorCamera = mirrorCameraObject.AddComponent<Camera>();
+        mirrorCamera.targetTexture = mirrorRenderTexture;
+        mirrorCameraObject.transform.position = position;
+        mirrorCamera.orthographic = true;
+        mirrorCamera.orthographicSize = orthographicSize;
+        mirrorCamera.aspect = (maxX - minX) / (maxY - minY);
+        int playerLayerMask = 1 << LayerMask.NameToLayer("Player");
+        mirrorCamera.cullingMask = ~(playerLayerMask);
+
+        mirrorCamera.clearFlags = CameraClearFlags.SolidColor;
+        mirrorCamera.backgroundColor = Color.black; // Optional: set a background color
+        mirrorCamera.depth = 1;
+        mirrorCameras.Add(mirrorCamera);
+        mirrorCameras.Add(mirrorCamera);
+
+
+        // SpriteMask spriteMask = mirrorCameraObject.AddComponent<SpriteMask>();
+        // spriteMask.sprite = Resources.Load<Sprite>("invisible.png");
+
+        // SpriteRenderer[] playerSpriteRenderers = player.GetComponentsInChildren<SpriteRenderer>();
+        // foreach (SpriteRenderer sr in playerSpriteRenderers)
+        // {
+        //     sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+        // }
+
+        //Debug.Log($"Camera Position: {mirrorCameraObject.transform.position}, Orth Size: {orthographicSize}, aspect: {mirrorCamera.aspect}");
+
+
+        // DISPLAY
+
+        Vector3 dPosition = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 1f);
+        Vector2 size = new Vector2(maxX - minX, maxY - minY);
+
+        GameObject mirrorDisplay = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mirrorDisplay.name = "HidingDisplay_" + suffix;
+        mirrorDisplays.Add(mirrorDisplay);
+        // Temporarily unparent to set correct world space position and scale
+        mirrorDisplay.transform.parent = null;
+        mirrorDisplay.transform.position = dPosition;
+        mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 0f);
+
+        // Set the material and texture for the quad
+        Material mirrorMaterial = new Material(Shader.Find("Unlit/Transparent"));
+        mirrorMaterial.mainTexture = mirrorRenderTexture;
+        mirrorMaterial.color = new Color(1, 1, 1, 0.5f);
+        mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
+
+        Renderer displayRenderer = mirrorDisplay.GetComponent<MeshRenderer>();
+        displayRenderer.sortingLayerName = "Mirror2";
+        displayRenderer.sortingOrder = 0;
+
+        mirrorDisplay.transform.parent = transform;
+        mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(dPosition);
+
+        // Debug.Log($"sortingLayerName: {displayRenderer.sortingLayerName}, sortingOrder: {displayRenderer.sortingOrder}");
     }
 
 
