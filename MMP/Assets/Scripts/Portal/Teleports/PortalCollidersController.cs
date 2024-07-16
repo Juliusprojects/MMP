@@ -31,6 +31,8 @@ public class PortalCollidersController : MonoBehaviour
     public GameObject OuterPortalArea { get; private set; }
     private List<GameObject> extraBoxes = new();
 
+    int combinedGroundLayersMask;
+
 
     void Awake()
     {
@@ -65,7 +67,7 @@ public class PortalCollidersController : MonoBehaviour
         //SetupMirrorDisplay(dMinX, dMaxX, sMinY, sMaxY, "left");
         //SetupMirrorDisplay(sMinX, sMaxX, sMinY, sMaxY);
         SetupCamerasAndDisplays();
-
+        combinedGroundLayersMask = (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Cave"));
     }
 
 
@@ -421,13 +423,13 @@ public class PortalCollidersController : MonoBehaviour
     {
         List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.SetLayerMask(combinedGroundLayersMask);
         filter.useTriggers = false;
 
         List<Collider2D> results = new List<Collider2D>();
 
         int collisionCount = Physics2D.OverlapCollider(topPortalCollider, filter, results);
-        Debug.Log("TEST: " +  collisionCount);
+        //Debug.Log($"TEST: {collisionCount}");
         for (int i = 0; i < collisionCount; i++)
         {
             if (results[i].bounds.min.y > topPortalCollider.bounds.min.y) continue;
@@ -442,7 +444,7 @@ public class PortalCollidersController : MonoBehaviour
     {
         List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.SetLayerMask(combinedGroundLayersMask);
         filter.useTriggers = false;
 
         List<Collider2D> results = new List<Collider2D>();
@@ -461,7 +463,7 @@ public class PortalCollidersController : MonoBehaviour
     {
         List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(LayerMask.GetMask("Ground"));
+        filter.SetLayerMask(combinedGroundLayersMask);
         filter.useTriggers = false;
 
         List<Collider2D> results = new List<Collider2D>();
@@ -469,7 +471,7 @@ public class PortalCollidersController : MonoBehaviour
         int collisionCount = Physics2D.OverlapCollider(leftPortalCollider, filter, results);
         for (int i = 0; i < collisionCount; i++)
         {
-            if (results[i].bounds.max.x < topPortalCollider.bounds.max.x) continue;
+            if (results[i].bounds.max.x < leftPortalCollider.bounds.max.x) continue;
             collisionBounds.Add(results[i].bounds);
         }
 
@@ -684,9 +686,8 @@ public class PortalCollidersController : MonoBehaviour
     //     return !overlaps;
     // }
 
-    public bool CanTeleport(PortalSide portalSide, Vector3 playerPosition)
+    public bool CanTeleport(PortalSide portalSide, Vector3 playerPosition, Collider2D collider)
     {
-        Collider2D playerCollider = player.GetComponent<Collider2D>();
         Vector3 newPosition = playerPosition;
 
         Vector2 areaStart = Vector2.zero;
@@ -697,23 +698,23 @@ public class PortalCollidersController : MonoBehaviour
         {
             case PortalSide.Bottom:
                 newPosition.y = topPortalCollider.bounds.min.y;
-                areaStart = new Vector2(playerCollider.bounds.min.x + 0.1f, newPosition.y + slack);
-                areaEnd = new Vector2(playerCollider.bounds.max.x - 0.1f, newPosition.y - slack);
+                areaStart = new Vector2(collider.bounds.min.x + 0.1f, newPosition.y + slack);
+                areaEnd = new Vector2(collider.bounds.max.x - 0.1f, newPosition.y - slack);
                 break;
             case PortalSide.Top:
                 newPosition.y = bottomPortalCollider.bounds.max.y;
-                areaStart = new Vector2(playerCollider.bounds.min.x - 0.1f, newPosition.y);
-                areaEnd = new Vector2(playerCollider.bounds.max.x - 0.1f, newPosition.y);
+                areaStart = new Vector2(collider.bounds.min.x - 0.1f, newPosition.y);
+                areaEnd = new Vector2(collider.bounds.max.x - 0.1f, newPosition.y);
                 break;
             case PortalSide.Left:
                 newPosition.x = rightPortalCollider.bounds.min.x;
-                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y + 0.1f); // adding 0.1 so the ground on the other side doesnt block teleport
-                areaEnd = new Vector2(newPosition.x, playerCollider.bounds.max.y);
+                areaStart = new Vector2(newPosition.x, collider.bounds.min.y + 0.1f); // adding 0.1 so the ground on the other side doesnt block teleport
+                areaEnd = new Vector2(newPosition.x, collider.bounds.max.y);
                 break;
             case PortalSide.Right:
                 newPosition.x = leftPortalCollider.bounds.max.x;
-                areaStart = new Vector2(newPosition.x, playerCollider.bounds.min.y + 0.1f);
-                areaEnd = new Vector2(newPosition.x, playerCollider.bounds.max.y);
+                areaStart = new Vector2(newPosition.x, collider.bounds.min.y + 0.1f);
+                areaEnd = new Vector2(newPosition.x, collider.bounds.max.y);
                 break;
         }
 
@@ -733,9 +734,9 @@ public class PortalCollidersController : MonoBehaviour
             .ToList();
         bool overlaps = realresults.Any();
 
-        if (portalSide == PortalSide.Bottom)
+        if (portalSide == PortalSide.Right)
         {
-            Debug.Log("Collisions: " + realresults.Count);
+           // Debug.Log("Collisions: " + overlaps);
         }
         // Debug.Log($"New position: {newPosition}");
         // Debug.Log($"Area Start: {areaStart}, Area End: {areaEnd}");
@@ -822,7 +823,8 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (portalController.CanTeleport(portalSide, other.GetComponent<Collider2D>().transform.position)) HandleTeleport(other);
+            var collider = other.GetComponent<Collider2D>();
+            if (portalController.CanTeleport(portalSide, collider.transform.position, collider)) HandleTeleport(other);
         }
         portalController.ResetPortalTriggers();
     }
@@ -840,7 +842,7 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (portalController.CanTeleport(portalSide, other.GetComponent<Collider2D>().transform.position)) HandleTeleport(other);
+            HandleTeleport(other);
         }
     }
 
@@ -848,7 +850,7 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            if (portalController.CanTeleport(portalSide, collision.collider.transform.position)) HandleTeleport(collision.collider);
+            HandleTeleport(collision.collider);        
         }
     }
 
@@ -856,7 +858,7 @@ public class PortalSideCollider : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            if (portalController.CanTeleport(portalSide, collision.collider.transform.position)) HandleTeleport(collision.collider);
+            HandleTeleport(collision.collider);
         }
     }
 
@@ -884,6 +886,9 @@ public class PortalSideCollider : MonoBehaviour
         Bounds colliderBounds = GetComponent<Collider2D>().bounds;
         float minVelocityThreshold = 0f;
 
+        bool canTeleport = portalController.CanTeleport(portalSide, collider.transform.position, collider);
+        Debug.Log($"CAN TELEPORT: {canTeleport}");
+        if (!canTeleport) return;
         // Debug.Log("v y: " + rb.velocity.y);
         // Debug.Log("v x: " + rb.velocity.x);
         // Debug.Log("Portalside :" + portalSide);
@@ -922,6 +927,7 @@ public class PortalSideCollider : MonoBehaviour
             case PortalSide.Right:
                 if (rb.velocity.x > minVelocityThreshold && playerBounds.max.x - colliderBounds.min.x >= (playerBounds.size.x / 2))
                 {
+                    Debug.Log("TELEPORT TO LEFT");
                     portalController.TeleportPlayer(portalSide, collider);
                 }
                 break;

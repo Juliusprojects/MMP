@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Sprite newSprite;
     private bool grounded = false;
+    private int combinedGroundLayersMask;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
         //transform.position = points[startPoint].position;
         gameObject.GetComponent<Animator>().enabled = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        combinedGroundLayersMask = (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Cave"));
     }
 
     // Update is called once per frame
@@ -95,7 +97,7 @@ public class Enemy : MonoBehaviour
             //respawnPlayer
             collision.gameObject.transform.position = collision.gameObject.GetComponent<PlayerController>().respawnPoint;
         }
-        else if (collision.gameObject.CompareTag("Ground"))
+        else if ((combinedGroundLayersMask & (1 << collision.gameObject.layer)) != 0)
         {
             grounded = true;
         }

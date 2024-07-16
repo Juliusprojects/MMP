@@ -56,16 +56,16 @@ public class PlayerController : MonoBehaviour
     {
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
+        if (InputUtil.Fire() && Time.time - attackTime > attackCooldown && !DialogueManager.isDialogueActive) { Attack(); }
         Move(InputUtil.HorizontalInput());
-
-        if (InputUtil.Fire() && Time.time - attackTime > attackCooldown && !DialogueManager.isDialogueActive)
-        {
-            anim.SetTrigger("attack");
-            particleSystem.Play();
-            Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
-        }
     }
 
+    private void Attack()
+    {
+        anim.SetTrigger("attack");
+        particleSystem.Play();
+        Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
+    }
 
 
     private void FixedUpdate()
@@ -141,12 +141,12 @@ public class PlayerController : MonoBehaviour
     // {
     //     RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
     //     bool wasGrounded = grounded;
-    //     grounded = hit.collider != null; // Sets grounded to true if the ray hits the ground layer
+    //     grounded = hit.collider != null; 
 
-    //     if (grounded && !wasGrounded) // Just landed
+    //     if (grounded && !wasGrounded) 
     //     {
     //         //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
-    //         groundedTime = Time.time; // Set to time of impact when landing on ground layer
+    //         groundedTime = Time.time; 
     //         isJumping = false;
     //         anim.SetBool("isJump2", false);
 
@@ -163,9 +163,9 @@ public class PlayerController : MonoBehaviour
         int hitCount = Physics2D.Raycast(groundCheck.position, Vector2.down, contactFilter, hits, groundCheckDistance);
 
         bool wasGrounded = grounded;
-        grounded = hitCount > 0 && hits[0].collider != null; // Sets grounded to true if the ray hits a non-trigger collider
+        grounded = hitCount > 0 && hits[0].collider != null;
 
-        if (grounded && !wasGrounded) // Just landed
+        if (grounded && !wasGrounded)  // just landed
         {
             //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
             groundedTime = Time.time;
