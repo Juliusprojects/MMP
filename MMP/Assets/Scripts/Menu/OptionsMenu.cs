@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Util;
 
@@ -14,6 +15,7 @@ public class OptionsMenu : MonoBehaviour
     public TMP_Dropdown resolutionDropDown;
     public Slider masterVolume;
     public Slider musicVolume;
+    public Slider soundVolume;
 
     // Start is called before the first frame update
     void Start()
@@ -64,9 +66,14 @@ public class OptionsMenu : MonoBehaviour
         audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20f);
     }
 
-    public void SetMusicVolume(float volume)
+    public void SetMusicVolume (float volume)
     {
         audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20f);
+    }
+
+    public void SetSoundVolume (float volume)
+    {
+        audioMixer.SetFloat("SoundVolume", Mathf.Log10(volume) * 20f);
     }
 
     public void SetMute (bool isMute)
@@ -80,7 +87,6 @@ public class OptionsMenu : MonoBehaviour
             AudioListener.volume = 1;
         }
     }
-
     private void OnDropdownChange()
     {
         // 0: Jump

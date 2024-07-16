@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-8316816449020583326
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: ebfc45ce5685ac04a80ab57b3d9a6e2c
+  m_EffectName: Attenuation
+  m_MixLevel: 514a7991078f48e4fa76197e75b94051
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-4086205860196637571
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -34,10 +48,13 @@ AudioMixerController:
     name: MasterVolume
   - guid: 363c3192447a841458280de297d4205f
     name: MusicVolume
+  - guid: 2cb480b544309ee4f9666d1dae1bfa38
+    name: MyExposedParam
   m_AudioMixerGroupViews:
   - guids:
     - 51eb95074375727448fb72be1accad3a
     - a583285f470df204491f4513cb11e4ad
+    - 65e04447d0d723c4ab509d5aa409cc93
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -52,6 +69,7 @@ AudioMixerGroupController:
   m_GroupID: 51eb95074375727448fb72be1accad3a
   m_Children:
   - {fileID: 4809006211164855146}
+  - {fileID: 6404696213757141380}
   m_Volume: eb21d307202e09a41902e66c8bb2f7d8
   m_Pitch: e331a02625e11014d9cbe09a9d498030
   m_Send: 00000000000000000000000000000000
@@ -86,6 +104,7 @@ AudioMixerSnapshotController:
   m_SnapshotID: 33113989802bf4447ac8566a85a9f3ab
   m_FloatValues:
     363c3192447a841458280de297d4205f: 0
+    2cb480b544309ee4f9666d1dae1bfa38: 0
     eb21d307202e09a41902e66c8bb2f7d8: 0
   m_TransitionOverrides: {}
 --- !u!243 &4809006211164855146
@@ -103,6 +122,25 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: -4086205860196637571}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!243 &6404696213757141380
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sounds
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 65e04447d0d723c4ab509d5aa409cc93
+  m_Children: []
+  m_Volume: 2cb480b544309ee4f9666d1dae1bfa38
+  m_Pitch: 972a4a2ae540c9545a999bc44972e3b6
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -8316816449020583326}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
