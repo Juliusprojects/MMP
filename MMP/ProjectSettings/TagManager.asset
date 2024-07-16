@@ -20,7 +20,7 @@ TagManager:
   - Player
   - Enemy
   - EnemyGround
-  - 
+  - Cave
   - 
   - 
   - 
@@ -49,6 +49,12 @@ TagManager:
     locked: 0
   - name: Mirror
     uniqueID: 2756425401
+    locked: 0
+  - name: CaveBackground
+    uniqueID: 2223515153
+    locked: 0
+  - name: Cave
+    uniqueID: 203241195
     locked: 0
   - name: Map
     uniqueID: 1084698735

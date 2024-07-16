@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEngine.Analytics;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class DialogueManager : MonoBehaviour
     private Queue<string> sentences;
     public static bool isDialogueActive = false;
 
+    public static bool isDone = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +27,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue (Dialogue dialogue)
     {
-
+        if (isDone) return;
         isDialogueActive = true;
 
         nameText.text = dialogue.name;
@@ -53,7 +56,7 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue () 
     {
-
+        isDone = true;
         FindObjectOfType<DialogueTrigger>().dialogueCanvas.SetActive(false);
         Debug.Log("End Dialogue");
     }
