@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
+        if (Time.timeScale == 0) { return; }
         anim.SetTrigger("attack");
         particleSystem.Play();
         Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
