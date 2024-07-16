@@ -99,13 +99,11 @@ public class PortalCollidersController : MonoBehaviour
         float sideOffset = 3f;
         var sMinX = leftPortalCollider.bounds.max.x - sideOffset;
         var sMaxX = leftPortalCollider.bounds.max.x;
-        var sMaxY = leftPortalCollider.bounds.max.y;
-        var sMinY = leftPortalCollider.bounds.min.y;
+        var sMaxY = topPortalCollider.bounds.min.y;
+        var sMinY = bottomPortalCollider.bounds.max.y;
 
         var dMaxX = rightPortalCollider.bounds.min.x;
         var dMinX = rightPortalCollider.bounds.min.x - sideOffset;
-        var dMaxY = rightPortalCollider.bounds.max.y;
-        var dMinY = rightPortalCollider.bounds.min.y;
 
         SetupMirrorCamera(sMinX, sMaxX, sMinY, sMaxY, dMinX, dMaxX, sMinY, sMaxY, "left");
         //SetupHidingCamera(sMinX, sMaxX, sMinY, sMaxY, "left");
@@ -116,8 +114,8 @@ public class PortalCollidersController : MonoBehaviour
         float sideOffset = 3f;
         var sMinX = rightPortalCollider.bounds.min.x;
         var sMaxX = rightPortalCollider.bounds.min.x + sideOffset;
-        var sMaxY = leftPortalCollider.bounds.max.y;
-        var sMinY = leftPortalCollider.bounds.min.y;
+        var sMaxY = topPortalCollider.bounds.min.y;
+        var sMinY = bottomPortalCollider.bounds.max.y;
 
         var dMaxX = leftPortalCollider.bounds.max.x + sideOffset;
         var dMinX = leftPortalCollider.bounds.max.x;
@@ -191,7 +189,7 @@ public class PortalCollidersController : MonoBehaviour
         mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
 
         Renderer displayRenderer = mirrorDisplay.GetComponent<MeshRenderer>();
-        displayRenderer.sortingLayerName = "Mirror";
+        displayRenderer.sortingLayerName = "Player";
         displayRenderer.sortingOrder = 0;
 
         mirrorDisplay.transform.parent = transform;
