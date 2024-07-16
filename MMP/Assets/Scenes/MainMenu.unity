@@ -1747,8 +1747,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 429432215}
-  - {fileID: 1807733129}
   - {fileID: 654666652}
+  - {fileID: 1807733129}
   m_Father: {fileID: 865010063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -3549,7 +3549,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 80, y: 1.0999908}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &779055545
@@ -6828,7 +6828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 80.49988, y: 0.00012207031}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1807733130
@@ -7981,8 +7981,8 @@ MonoBehaviour:
   spaceFunctionDropdown: {fileID: 1233136946}
   audioMixer: {fileID: 24100000, guid: c6a1450b42ba28946811328b5760f53d, type: 2}
   resolutionDropDown: {fileID: 464321397}
-  masterVolume: {fileID: 0}
-  musicVolume: {fileID: 0}
+  masterVolume: {fileID: 779055545}
+  musicVolume: {fileID: 1807733130}
 --- !u!1 &2097144104
 GameObject:
   m_ObjectHideFlags: 0
