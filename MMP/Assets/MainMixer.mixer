@@ -56,7 +56,12 @@ AudioMixerController:
     - a583285f470df204491f4513cb11e4ad
     - 65e04447d0d723c4ab509d5aa409cc93
     name: View
-  m_CurrentViewIndex: 0
+  - guids:
+    - 51eb95074375727448fb72be1accad3a
+    - a583285f470df204491f4513cb11e4ad
+    - 65e04447d0d723c4ab509d5aa409cc93
+    name: ViewGame
+  m_CurrentViewIndex: 1
   m_TargetSnapshot: {fileID: 24500006}
 --- !u!243 &24300002
 AudioMixerGroupController:
