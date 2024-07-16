@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 6f;
     public float lowJumpMultiplier = 9f;
     public float jumpCooldown = 0.13f;
+    private float attackCooldown = 0.5f;
+    private float attackTime = 0f;
     public ParticleSystem deathParticle;
     public ParticleSystem particleSystem;
     public Vector3 respawnPoint;
@@ -42,7 +44,7 @@ public class PlayerController : MonoBehaviour
         // after changing running to a velocity based method to check velocity on portal collision the character moved laggy without this
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         // finally this fixed a bug where the player would overlap a bit with colliders when colliding on high velocity and triggering the portal if its close behind the wall
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; 
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
         if (groundCheck == null)
         {
@@ -55,19 +57,16 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         if (InputUtil.Up()) { Jump(); }
         Move(InputUtil.HorizontalInput());
-        if (!DialogueManager.isDialogueActive)
+
+        if (InputUtil.Fire() && Time.time - attackTime > attackCooldown && !DialogueManager.isDialogueActive)
         {
-            if (InputUtil.Fire())
-            {
-                anim.SetTrigger("attack");
-                particleSystem.Play();
-                Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
-            }
+            anim.SetTrigger("attack");
+            particleSystem.Play();
+            Instantiate(ProjectilePrefab, LaunchOffset.position, transform.rotation);
         }
-        
     }
 
-    
+
 
     private void FixedUpdate()
     {
@@ -96,9 +95,12 @@ public class PlayerController : MonoBehaviour
         //transform.rotation = horizontalInput > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
 
         Quaternion targetRotation = transform.rotation;
-        if (horizontalInput > 0) {
+        if (horizontalInput > 0)
+        {
             targetRotation = Quaternion.Euler(0, 180, 0);
-        } else if (horizontalInput < 0) {
+        }
+        else if (horizontalInput < 0)
+        {
             targetRotation = Quaternion.Euler(0, 0, 0);
         }
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
@@ -110,13 +112,13 @@ public class PlayerController : MonoBehaviour
         {
             //transform.localScale = new Vector3(Mathf.Sign(-horizontalInput), 1, 1); 
             if (!anim.GetBool("isJump2"))
-            {                
-                anim.SetBool("isRun2", true);             
+            {
+                anim.SetBool("isRun2", true);
             }
         }
         else
         {
-            anim.SetBool("isRun2", false);            
+            anim.SetBool("isRun2", false);
         }
 
     }
@@ -151,11 +153,11 @@ public class PlayerController : MonoBehaviour
     //     }
     // }
 
-    
+
     void CheckGrounded()
     {
         ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.useTriggers = false; 
+        contactFilter.useTriggers = false;
 
         RaycastHit2D[] hits = new RaycastHit2D[1];
         int hitCount = Physics2D.Raycast(groundCheck.position, Vector2.down, contactFilter, hits, groundCheckDistance);
@@ -165,10 +167,10 @@ public class PlayerController : MonoBehaviour
 
         if (grounded && !wasGrounded) // Just landed
         {
-        //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
-        groundedTime = Time.time; 
-        isJumping = false;
-        anim.SetBool("isJump2", false);
+            //Debug.Log("Jump Height: " + (maxYPosition - transform.position.y));
+            groundedTime = Time.time;
+            isJumping = false;
+            anim.SetBool("isJump2", false);
         }
     }
 }
