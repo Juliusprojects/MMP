@@ -158,19 +158,16 @@ public class PortalCollidersController : MonoBehaviour
         mirrorCameras.Add(mirrorCamera);
 
 
-        SpriteMask spriteMask = mirrorCameraObject.AddComponent<SpriteMask>();
-        // Assign a mask sprite (make sure you have a mask sprite in your assets)
-        spriteMask.sprite = Resources.Load<Sprite>("invisible.png");
+        // SpriteMask spriteMask = mirrorCameraObject.AddComponent<SpriteMask>();
+        // spriteMask.sprite = Resources.Load<Sprite>("invisible.png");
 
-        // Set all SpriteRenderer components on the player and its children to be invisible inside the mask
-        SpriteRenderer[] playerSpriteRenderers = player.GetComponentsInChildren<SpriteRenderer>();
-        foreach (SpriteRenderer sr in playerSpriteRenderers)
-        {
-            sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-        }
+        // SpriteRenderer[] playerSpriteRenderers = player.GetComponentsInChildren<SpriteRenderer>();
+        // foreach (SpriteRenderer sr in playerSpriteRenderers)
+        // {
+        //     sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+        // }
 
-        // Debugging: Ensure the camera setup is correct
-        Debug.Log($"Camera Position: {mirrorCameraObject.transform.position}, Orthographic Size: {orthographicSize}, Aspect Ratio: {mirrorCamera.aspect}");
+        //Debug.Log($"Camera Position: {mirrorCameraObject.transform.position}, Orth Size: {orthographicSize}, aspect: {mirrorCamera.aspect}");
 
 
         // DISPLAY
@@ -187,19 +184,19 @@ public class PortalCollidersController : MonoBehaviour
         mirrorDisplay.transform.localScale = new Vector3(size.x, size.y, 0f);
 
         // Set the material and texture for the quad
-        Material mirrorMaterial = new Material(Shader.Find("Unlit/Texture"));
+        Material mirrorMaterial = new Material(Shader.Find("Unlit/Transparent")); 
         mirrorMaterial.mainTexture = mirrorRenderTexture;
+        mirrorMaterial.color = new Color(1, 1, 1, 0.5f); 
         mirrorDisplay.GetComponent<Renderer>().material = mirrorMaterial;
 
         Renderer displayRenderer = mirrorDisplay.GetComponent<MeshRenderer>();
         displayRenderer.sortingLayerName = "Mirror";
         displayRenderer.sortingOrder = 0;
 
-        // Parent the display back to the current transform and adjust local position
         mirrorDisplay.transform.parent = transform;
         mirrorDisplay.transform.localPosition = transform.InverseTransformPoint(dPosition);
-        // Debugging: Ensure the display setup is correct
-        Debug.Log($"sortingLayerName: {displayRenderer.sortingLayerName}, sortingOrder: {displayRenderer.sortingOrder}");
+        
+       // Debug.Log($"sortingLayerName: {displayRenderer.sortingLayerName}, sortingOrder: {displayRenderer.sortingOrder}");
     }
 
 
@@ -207,7 +204,7 @@ public class PortalCollidersController : MonoBehaviour
 
 
 
-    // WORKING BLACK CHARACTER
+    // WORKING VERSION BUT BLACK CHARACTER ON SCREEN
     //  public void SetupMirrorDisplay(float minX, float maxX, float minY, float maxY)
     // {
     //     float width = maxX - minX;
@@ -370,7 +367,7 @@ public class PortalCollidersController : MonoBehaviour
 
     private List<Bounds> GetCollisionBoundsForBottomPortal()
     {
-                List<Bounds> collisionBounds = new List<Bounds>();
+        List<Bounds> collisionBounds = new List<Bounds>();
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(LayerMask.GetMask("Ground"));
         filter.useTriggers = false;
