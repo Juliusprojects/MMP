@@ -14,9 +14,9 @@ public class MenuControl : MonoBehaviour
     void Start() 
     {
         settingsPanel.SetActive(false);  
-        if (spaceFunctionDropdown != null) {
+        /*if (spaceFunctionDropdown != null) {
             spaceFunctionDropdown.onValueChanged.AddListener(delegate { OnDropdownChange(); });
-        }
+        }*/
     }
     public void PlayGame()
     {
@@ -36,11 +36,11 @@ public class MenuControl : MonoBehaviour
     {
         Application.Quit();
     }
-    private void OnDropdownChange()
+    /*private void OnDropdownChange()
     {
         // 0: Jump
         // 1: Portal
         bool useSpaceForJump = spaceFunctionDropdown.value == 0;
         InputUtil.SetUseSpaceForJump(useSpaceForJump);
-    }
+    }*/
 }
