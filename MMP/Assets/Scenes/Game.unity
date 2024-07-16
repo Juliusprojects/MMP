@@ -105664,8 +105664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc0af62393edac438758327276e1e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 0}
-  dialogueText: {fileID: 0}
+  nameText: {fileID: 1271622194}
+  dialogueText: {fileID: 1533431442}
 --- !u!1 &1336718063
 GameObject:
   m_ObjectHideFlags: 0
@@ -107598,7 +107598,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1332622555}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: DisplayNextSentence
         m_Mode: 1
