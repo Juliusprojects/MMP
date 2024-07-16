@@ -173,6 +173,25 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isJump2", false);
         }
     }
+
+    public void DieAndRespawn()
+    {
+        GameObject.FindWithTag("Player").GetComponent<PlayerController>().deathParticle.Play();
+        //deactivate Portal if Active
+        var portal = GameObject.FindWithTag("Portal");
+        if (portal != null)
+        {
+            portal.SetActive(false);
+        }
+        //respawnPlayer
+        StartCoroutine(WaitAndRespawn(GameObject.FindWithTag("Player")));
+    }
+
+    IEnumerator WaitAndRespawn(GameObject player)
+    {
+        yield return new WaitForSeconds(0.3f);
+        player.transform.position = player.GetComponent<PlayerController>().respawnPoint;
+    }
 }
 
 

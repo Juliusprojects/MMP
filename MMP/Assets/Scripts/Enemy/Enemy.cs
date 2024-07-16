@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour
         
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PlayerController>().deathParticle.Play();
+            /*collision.gameObject.GetComponent<PlayerController>().deathParticle.Play();
             //deactivate Portal if Active
             var portal = GameObject.FindWithTag("Portal");
             if (portal != null)
@@ -96,7 +96,8 @@ public class Enemy : MonoBehaviour
                 portal.SetActive(false);
             }
             //respawnPlayer
-            StartCoroutine(WaitAndRespawn(collision.gameObject));
+            StartCoroutine(WaitAndRespawn(collision.gameObject));*/
+            collision.gameObject.GetComponent<PlayerController>().DieAndRespawn();
         }
         else if ((combinedGroundLayersMask & (1 << collision.gameObject.layer)) != 0)
         {
@@ -123,9 +124,9 @@ public class Enemy : MonoBehaviour
         spriteRenderer.sprite = newSprite;
     }
 
-    IEnumerator WaitAndRespawn(GameObject player)
+    /*IEnumerator WaitAndRespawn(GameObject player)
     {
         yield return new WaitForSeconds(0.3f);
         player.transform.position = player.GetComponent<PlayerController>().respawnPoint;
-    }
+    }*/
 }
