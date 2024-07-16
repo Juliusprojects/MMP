@@ -103,7 +103,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0.6
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -114,7 +114,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 2
+  m_Constraints: 0
 --- !u!58 &2169579288843027235
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -197,4 +197,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c873acba8ac3204498a943b5b5237524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchvelocity: 4.5

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LaunchProjectile : MonoBehaviour
 {
-    public float launchvelocity = 13f;
+    private float launchvelocity = 13f;
 
     // Update is called once per frame
 
@@ -15,7 +15,7 @@ public class LaunchProjectile : MonoBehaviour
         sprite.sortingLayerName = "Player";
         Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
         float v = transform.rotation.y >= 0 ? -launchvelocity : launchvelocity;
-        rb.velocity = new Vector2(v, rb.velocity.y);
+        rb.velocity = new Vector2(v, rb.velocity.y + 1f);
         Debug.Log($"VELOCITY: {v}");
     }
     void Update()
@@ -47,8 +47,6 @@ public class LaunchProjectile : MonoBehaviour
         }
 
         if (collider.isTrigger) return;
-
-        Debug.Log($"COLLIDER NAME: {collider.gameObject} // ISTRIGGER: {collider.isTrigger}");
         Destroy(gameObject);
     }
 }
