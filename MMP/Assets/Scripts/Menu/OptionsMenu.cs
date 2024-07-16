@@ -11,11 +11,13 @@ public class OptionsMenu : MonoBehaviour
     public TMP_Dropdown spaceFunctionDropdown;
     public AudioMixer audioMixer;
     Resolution[] resolutions;
-    public Dropdown resolutionDropDown;
+    public TMP_Dropdown resolutionDropDown;
+    public Slider masterVolume;
+    public Slider musicVolume;
 
     // Start is called before the first frame update
     void Start()
-    {
+    { 
         resolutions = Screen.resolutions;
         resolutionDropDown.ClearOptions();
         List<string> options = new List<string>();
@@ -57,9 +59,14 @@ public class OptionsMenu : MonoBehaviour
         QualitySettings.SetQualityLevel(qualityindex);
     }
 
-    public void SetVolume (float volume)
+    public void SetMasterVolume (float volume)
     {
-        audioMixer.SetFloat("Volume", volume);
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20f);
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20f);
     }
 
     public void SetMute (bool isMute)
