@@ -469,7 +469,7 @@ public class PortalCollidersController : MonoBehaviour
         int collisionCount = Physics2D.OverlapCollider(leftPortalCollider, filter, results);
         for (int i = 0; i < collisionCount; i++)
         {
-            if (results[i].bounds.max.x > topPortalCollider.bounds.max.x) continue;
+            if (results[i].bounds.max.x < topPortalCollider.bounds.max.x) continue;
             collisionBounds.Add(results[i].bounds);
         }
 
@@ -488,7 +488,7 @@ public class PortalCollidersController : MonoBehaviour
         int collisionCount = Physics2D.OverlapCollider(rightPortalCollider, filter, results);
         for (int i = 0; i < collisionCount; i++)
         {
-            if (results[i].bounds.max.x < rightPortalCollider.bounds.max.x) continue;
+            if (results[i].bounds.max.x > rightPortalCollider.bounds.max.x) continue;
             collisionBounds.Add(results[i].bounds);
         }
 
